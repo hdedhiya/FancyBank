@@ -1,0 +1,73 @@
+Account.java
+File that implements basic bookkeeping for accounts, like keeping balance, rate, index, and a collection of transactions associated with the account.
+
+Benefit to current design: Defines methods like getBalance, getRate, addTransaction for all descendent classes, specifically Checking, Loan, and Savings. Also defines abstract methods that are filled later, specifically applyInterest. Lets us call applyInterest generically on all accounts without checking which type the account is. 
+
+Benefit to future design: Can be used in an design that requires accounts with bookkeeping, with possibilities for descendent classes to implement their own applyInterest.
+
+Transaction.java
+Object that keeps various statistics for each transaction. A hashmap of transactions is maintained for each account. There is also a general hashmap that the banker can access that overlooks each account. 
+Benefit to existing design: Has fields like accountType, accountNumber, transactionType initialBalance, finalBalance, fees. These are displayed when we click on view Transaction from either the customer view or the owner view.
+Benefit to future design: Can be used whenever there are accounts that need to handle transactions or keep a history of transactions.
+
+Checking.java
+Class that defines all Checking accounts. Extends from Account. defines its own applyInterest(do nothing), and sets relevant variables to be specific to Checking accounts, like setting accountType to "Checking".
+
+Benefit to current design: Used to define checking accounts
+
+Benefit to future designs: Can be used for checking accounts in future designs.
+
+Savings.java
+Class that defines all Checking accounts. Extends from Account. defines its own applyInterest, derived from rate and minAmount, and sets relevant variables to be specific to Savings accounts, like setting accountType to Savings.
+
+Benefit to current design: Used to define Savings accounts
+
+Benefit to future designs: Can be used for Savings accounts in future designs.
+
+Loan.java
+Class that defines all Loan accounts. Extends from Account. defines its own applyInterest, derived from rate, and sets relevant variables to be specific to Loan accounts, like setting accountType to Loan 
+
+Benefit to current design: Used to define Loan accounts
+
+Benefit to future designs: Can be used for Loan accounts in future designs.
+
+Person.java
+Generic Class that defines a person with a username and a password.
+Benefit to current design: Gives a common interface that both Bankers and BankCustomers can use for the login system. We can call getPassword and getUsername for both.
+Benefit to future designs: Can be used in any design that requires people with usernames and passwords.
+
+Owner.java
+Generic Class that extends from Person. Allows us to differentiate from Customers to give two different views after login.
+Benefit to future design: Can be used in any future design that requires differentiation in Persons to give different views.
+
+Banker.java
+Specific extension of Owner class used for this program.
+
+Customer.java
+Generic Class that extends from Person. Allows us to differentiate from Owners to give two different views after login.
+Benefit to future design: Can be used in any future design that requires differentiation in Persons to give different views.
+
+BankCustomer.java
+Specific extension of Customer class with a hashmap of accounts, and functions to add, remove, and get accounts.
+Benefit to current design: Allows us to give each customer a set of accounts, without limiting the number of accounts they get. Allows us to access and manipulate those set of accounts as well.
+Benefit to future design: Class is program specific, but can be used whenever a Customer needs a set of accounts.
+
+Login.java
+Generic login page that interacts with generic Customers and Owners to give two different views depending on the type of account made. Maintains a hashmap of users, using a pair of username,  password mapped to a Person. From there depending on the type of Person, we give two different views. The class provides the GUI for the login page as well. 
+Benefit to existing design: Defines abstract functions addCustomer, addOwner, ownerView, customerView so that any descendent class has access to them and can use the hashmap users that pairs usernames,passwords to a Person. The descendent class can define the extensions to Owner and Customer that make it specific to their business, and we can also define two custom views, one for owners and one for customers. This can also be specific to businesses.
+Benefit to future designs: Login can be used for any GUI application that requires usernames and passwords and logging in.
+
+PairCopy.java
+Used in BankCustomer to link both username and password to a Person object in a HashMap.
+Can be used in any design when we want a pair of objects. 
+
+Bank.java
+Main workhorse of the program. Extends Login. Provides two different views for Bankers and BankCustomers. Defines several different views and subviews, based on click events. We store several constants, like the amounts of fees, and the array of Currencies we will use for the program. We also have a separate Transaction hashmap here, that is used for all transactions across Customers for the Bank. We define all the click event methods in the class, like add account, delete account, deposit, withdraw, view accounts, view transactions and so on. We also define all the GUIs for all the views. Provides checks for all inputs making sure they are valid options, and also redraws GUI after successful method call. Basically every function is implemented here other than logging in.
+Benefit to future design: Useful for any bank application.
+
+Main.java
+Instantiated a Bank object with relevant currencies, and fee constants.
+
+Currency.java
+Class that keeps fields relevant to each currency, like textName, icon, and conversion rate. Each account is maintained at a base rate, but users can make transactions on whichever currencies the bank object is instantiated with, each transaction applies the conversion rate and then completes.
+
