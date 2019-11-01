@@ -6,9 +6,9 @@ import javax.swing.*;
 public class Main {
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("FancyBank");
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
 
         Currency[] cs = new Currency[3];
 
@@ -18,7 +18,7 @@ public class Main {
 
         Bank b = new Bank(cs, 5, 10, 2,1, .1, .2,500, 1);
 
-        b.placeComponents(frame);
+        b.placeComponents();
     }
 
 

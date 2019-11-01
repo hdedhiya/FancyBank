@@ -25,7 +25,9 @@ public abstract class Login {
         return users.get(new PairCopy(u, p));
     }
 
-    public void placeComponents(JFrame frame) {
+    public void placeComponents() {
+        JFrame frame = new JFrame("FancyBank");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.setVisible(false);
 
@@ -83,10 +85,12 @@ public abstract class Login {
                     Person user = getUser(t, p);
                     if (user != null){
                         if (user instanceof Owner){
-                            ownerView(frame, (Owner) user);
+                            ownerView((Owner) user);
+                            frame.dispose();
                         }
                         else if (user instanceof Customer){
-                            customerView(frame, (Customer) user);
+                            customerView((Customer) user);
+                            frame.dispose();
                         }
                     }
                     else{
@@ -171,9 +175,9 @@ public abstract class Login {
         return users.get(p);
     }
 
-    public abstract void ownerView(JFrame frame, Owner o);
+    public abstract void ownerView(Owner o);
 
-    public abstract void customerView(JFrame frame, Customer c);
+    public abstract void customerView(Customer c);
 
     public abstract boolean addCustomer(Customer c);
 
