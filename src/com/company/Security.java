@@ -1,10 +1,10 @@
 package com.company;
 
-//Checking account that extends Account
-public class Checking extends Account {
-    public Checking(double b, Currency c, double fee, double r){
-        super(b,c, fee, r);
-        setAccountType(AccountType.CHECHINGACCOUNT);
+public class Security extends Account {
+
+    public Security(double b, Currency c, double fee, double r) {
+        super(b, c, fee, r);
+        setAccountType(AccountType.SECURITYACCOUNT);
     }
 
     @Override

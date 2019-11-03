@@ -5,7 +5,7 @@ public class Savings extends Account {
     private double minAmountforInterest;
     public Savings(double b, Currency c, double fee, double r, double min){
         super(b, c, fee, r);
-        setAccountType("Savings");
+        setAccountType(AccountType.SAVINGACCOUNT);
         minAmountforInterest = min;
     }
 
@@ -14,7 +14,7 @@ public class Savings extends Account {
         double initB = getBalance();
         if (initB > minAmountforInterest){
             addBalance(initB*getRate());
-            Transaction t = new Transaction("Savings", getIndex(), "Apply Interest", initB, getBalance(), 0);
+            Transaction t = new Transaction(getAccountType(), getIndex(), "Apply Interest", initB, getBalance(), 0);
             addTransaction(t);
             return t;
         }
@@ -25,6 +25,6 @@ public class Savings extends Account {
 
     @Override
     public String toString() {
-        return "Savings Account " + this.getIndex() + " Balance: " + this.getBalance();
+        return getAccountType().toString() + this.getIndex() + " Balance: " + this.getBalance();
     }
 }
