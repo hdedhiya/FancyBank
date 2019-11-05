@@ -1,4 +1,4 @@
-package BankATM;
+package com.company;
 
 public class Stock {
     private String name;

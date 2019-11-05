@@ -1,4 +1,4 @@
-package BankATM;
+package com.company;
 
 import java.util.ArrayList;
 import java.util.Iterator;
