@@ -4,7 +4,11 @@ package com.company;
 public class Checking extends Account {
     public Checking(double b, Currency c, double fee, double r){
         super(b,c, fee, r);
-        setAccountType(AccountType.CHECHINGACCOUNT);
+        setAccountType("Checking");
+    }
+    
+    public Checking(String accountType) {
+    	super(accountType);
     }
 
     @Override
@@ -14,6 +18,6 @@ public class Checking extends Account {
 
     @Override
     public String toString() {
-        return getAccountType().toString() + this.getIndex() + " Balance: " + this.getBalance();
+        return "Checking Account " + this.getIndex() + " Balance: " + this.getBalance();
     }
 }

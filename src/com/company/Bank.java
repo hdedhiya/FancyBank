@@ -1,6 +1,4 @@
 package com.company;
-
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -42,16 +40,22 @@ public class Bank extends Login{
         maxLoanPercent = maxLoan;
     }
 
-    public boolean addCustomer(Customer c) {
-        String u = c.getUsername();
-        String p = c.getPassword();
-        if (get(new PairCopy(u, p)) == null) {
-            put(new PairCopy(u, p), new BankCustomer(u, p));
-            return true;
-        }
-        else{
-            return false;
-        }
+    public boolean addUser(Person person) {
+        String u = person.getUsername();
+        String p = person.getPassword();
+        String t = person.getType();
+        SQLConnection sc = new SQLConnection();
+		sc.TheSqlConnection();
+		boolean success = sc.addUser(u, p, t);
+		sc.close();
+		return success;
+//        if (get(new PairCopy(u, p)) == null) {
+//            put(new PairCopy(u, p), new BankCustomer(u, p));
+//            return true;
+//        }
+//        else{
+//            return false;
+//        }
     }
 
     public boolean addOwner(Owner o) {
@@ -223,22 +227,32 @@ public class Bank extends Login{
             @Override
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-                if (get(new PairCopy(p.getUsername(), p.getPassword())) != null){
-                    String str = JOptionPane.showInputDialog(source, "Enter New Password");
-
-                    if (str != null && !str.isEmpty()) {
-                        remove(new PairCopy(p.getUsername(), p.getPassword()));
-                        p.setPassword(str);
-                        put(new PairCopy(p.getUsername(), p.getPassword()), p);
-                        JOptionPane.showMessageDialog(source, "Password changed!");
-                    }
-                    else {
-                        JOptionPane.showMessageDialog(source, "You didn't enter a password!");
-                    }
+                String str = JOptionPane.showInputDialog(source, "Enter New Password");
+                if (str != null && !str.isEmpty()) {
+                	SQLConnection sc = new SQLConnection();
+            		sc.TheSqlConnection();
+                	sc.changeCustomerPW(p.getUsername(), str);
+                    JOptionPane.showMessageDialog(source, "Password changed!");
                 }
-                else{
-                    JOptionPane.showMessageDialog(source, "User did not exist!");
+                else {
+                    JOptionPane.showMessageDialog(source, "You didn't enter a password!");
                 }
+//                if (get(new PairCopy(p.getUsername(), p.getPassword())) != null){
+//                    String str = JOptionPane.showInputDialog(source, "Enter New Password");
+//
+//                    if (str != null && !str.isEmpty()) {
+//                        remove(new PairCopy(p.getUsername(), p.getPassword()));
+//                        p.setPassword(str);
+//                        put(new PairCopy(p.getUsername(), p.getPassword()), p);
+//                        JOptionPane.showMessageDialog(source, "Password changed!");
+//                    }
+//                    else {
+//                        JOptionPane.showMessageDialog(source, "You didn't enter a password!");
+//                    }
+//                }
+//                else{
+//                    JOptionPane.showMessageDialog(source, "User did not exist!");
+//                }
             }
         });
     }

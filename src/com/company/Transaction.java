@@ -2,14 +2,14 @@ package com.company;
 
 //Transaction class that is used in account and bank to keep track of changes.
 public class Transaction {
-    private AccountType accountType;
+    private String accountType;
     private int accountNumber;
     private String transactionType;
     private double initBalance;
     private double finalBalance;
     private double fee;
 
-    public Transaction(AccountType aT, int aN, String tT, double iB, double fB, double f){
+    public Transaction(String aT, int aN, String tT, double iB, double fB, double f){
         accountType = aT;
         accountNumber = aN;
         transactionType = tT;
@@ -18,7 +18,7 @@ public class Transaction {
         fee = f;
     }
 
-    public AccountType getAccountType(){
+    public String getAccountType(){
         return accountType;
     }
 

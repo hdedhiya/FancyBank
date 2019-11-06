@@ -22,7 +22,11 @@ public abstract class Login {
     }
 
     public Person getUser(String u, String p){
-        return users.get(new PairCopy(u, p));
+    	SQLConnection sc = new SQLConnection();
+		sc.TheSqlConnection();
+		Person user = sc.getUser(u, p);
+		sc.close();
+        return user;
     }
 
     public void placeComponents() {
@@ -84,11 +88,12 @@ public abstract class Login {
                 else{
                     Person user = getUser(t, p);
                     if (user != null){
-                        if (user instanceof Owner){
+                        if (user.getType().equals("banker")){
                             ownerView((Owner) user);
                             frame.dispose();
                         }
-                        else if (user instanceof Customer){
+                        else if (user.getType().equals("customer")){
+                        	System.out.println(user.getType());
                             customerView((Customer) user);
                             frame.dispose();
                         }
@@ -113,7 +118,8 @@ public abstract class Login {
                 else {
                     if (!usernames.contains(t)) {
                         Owner o = new Owner(t, p);
-                        boolean check = addOwner(o);
+                        o.setType("banker");
+                        boolean check = addUser(o);
                         if (!check) {
                             JOptionPane.showMessageDialog(source, "Username and password is already associated with an account");
                         } else {
@@ -143,8 +149,8 @@ public abstract class Login {
                     if (!usernames.contains(t)) {
 
                         Customer c = new Customer(t, p);
-
-                        boolean check = addCustomer(c);
+                        c.setType("customer");
+                        boolean check = addUser(c);
                         if (!check) {
                             JOptionPane.showMessageDialog(source, "Username is already associated with an account");
                         } else {
@@ -179,7 +185,7 @@ public abstract class Login {
 
     public abstract void customerView(Customer c);
 
-    public abstract boolean addCustomer(Customer c);
+    public abstract boolean addUser(Person p);
 
     public abstract boolean addOwner(Owner o);
 }

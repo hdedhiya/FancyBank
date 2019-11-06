@@ -1,6 +1,5 @@
 package com.company;
 
-
 //Specific Banker Class that extends Owner
 public class Banker extends Owner{
 
