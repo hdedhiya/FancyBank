@@ -1,3 +1,5 @@
+package com.company;
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -6,10 +8,10 @@ import java.util.List;
 
 public class SQLConnection {
 	//change the "test" here to the name of your own database
-	private static final String URL="jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8";
+	private static final String URL="jdbc:mysql://localhost:3306/fancybank?useUnicode=true&characterEncoding=utf8";
 	
 	private static final String NAME="root";//username
-	private static final String PASSWORD="?????";//password
+	private static final String PASSWORD="xjz950724";//password
 	public java.sql.Connection conn = null;
 	
 	public void TheSqlConnection(){
@@ -30,25 +32,25 @@ public class SQLConnection {
 	    }
 	}
 	
-	public List<Test> getSelect() {
-		//just for testing
-		String sql = "select * from testTb"; 
-	    PreparedStatement pst = null;
-	    List<Test> list = new ArrayList<Test>();
-	    try {
-	        pst = (PreparedStatement) conn.prepareStatement(sql);
-	        java.sql.ResultSet rs = pst.executeQuery();
-	        while (rs.next()) {
-	            int testId = Integer.parseInt(rs.getString("testID"));
-	            String testName = rs.getString("testName");
-	            Test test = new Test(testId, testName);
-	            list.add(test);
-	        }
-	    }catch (Exception e) {
-	        System.out.printf("don't get any");
-	   	}
-	    return list;
-	}
+//	public List<Test> getSelect() {
+//		//just for testing
+//		String sql = "select * from testTb";
+//	    PreparedStatement pst = null;
+//	    List<Test> list = new ArrayList<Test>();
+//	    try {
+//	        pst = (PreparedStatement) conn.prepareStatement(sql);
+//	        java.sql.ResultSet rs = pst.executeQuery();
+//	        while (rs.next()) {
+//	            int testId = Integer.parseInt(rs.getString("testID"));
+//	            String testName = rs.getString("testName");
+//	            Test test = new Test(testId, testName);
+//	            list.add(test);
+//	        }
+//	    }catch (Exception e) {
+//	        System.out.printf("don't get any");
+//	   	}
+//	    return list;
+//	}
 	
 	public void delete(){
 	    

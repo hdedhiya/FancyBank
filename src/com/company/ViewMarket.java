@@ -8,14 +8,14 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class ViewSecurity {
-    private Bank b;
+public class ViewMarket {
 
-    public ViewSecurity(Bank bb){
+    Bank b;
+    public ViewMarket(Bank bb){
         b = bb;
     }
     public void place(BankCustomer bc){
-        JFrame frame = new JFrame("FancyBank Security Account");
+        JFrame frame = new JFrame("Stock Market");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(false);
 
@@ -25,10 +25,10 @@ public class ViewSecurity {
 
         panel.setLayout(null);
 
-        //all of myStock list
-        //get this from database
-        //todo
-        Collection<Stock> myStocks = new ArrayList<>();
+
+        // pull down the stockmarket from database
+        //Collection<Stock> allStocks = new StockMarket().stockMarket;
+        Collection<Stock> allStocks = new ArrayList<>();
         String cols[] = {"Company Name", "Code", "Price", "Share"};
         DefaultTableModel tabelModel = new DefaultTableModel(cols, 0){
             @Override
@@ -37,7 +37,7 @@ public class ViewSecurity {
             }
         };
 
-        for(Stock s: myStocks){
+        for(Stock s: allStocks){
             Object[] obj = {s.getName(), s.getCode(), s.getPrice(), s.getShares()};
             tabelModel.addRow(obj);
         }
@@ -60,13 +60,14 @@ public class ViewSecurity {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ViewAccounts v = new ViewAccounts(b);
-                v.place(bc);
+                ViewSecurity vs = new ViewSecurity(b);
+                vs.place(bc);
                 frame.dispose();
             }
         });
 
-        JButton addAccount = new JButton("View Market");
+        //select a stock and buy. ask for how many shares and check if purchasing power is enough
+        JButton addAccount = new JButton("Buy Stock");
         addAccount.setBounds(10, 40, 140, 25);
         panel.add(addAccount);
 
@@ -75,26 +76,26 @@ public class ViewSecurity {
 
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-                ViewMarket vm = new ViewMarket(b);
-                vm.place(bc);
-                frame.dispose();
+
             }
         });
 
-        JButton deleteAccount = new JButton("Sell Stock");
+        //select one stock and show some more info on the stock
+        JButton deleteAccount = new JButton("Show Detail");
         deleteAccount.setBounds(10, 70, 140, 25);
         panel.add(deleteAccount);
 
         deleteAccount.addActionListener(new ActionListener() {
             @Override
+
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
                 int selected = table.getSelectedRow();
                 if (selected != -1) {
-                    Integer stock_index = (Integer) tabelModel.getValueAt(selected, 1);
-                    boolean checkBalance = checkEnough(bc.getAccount(stock_index).getBalance(), b.getCloseAccountFee());
+                    Integer account_index = (Integer) tabelModel.getValueAt(selected, 1);
+                    boolean checkBalance = checkEnough(bc.getAccount(account_index).getBalance(), b.getCloseAccountFee());
                     if (checkBalance) {
-                        Transaction check = bc.removeAccount(stock_index, b.getCloseAccountFee());
+                        Transaction check = bc.removeAccount(account_index, b.getCloseAccountFee());
                         if (check != null) {
                             JOptionPane.showMessageDialog(source, "Account deleted");
                             b.recentTransactions.put(b.getTransactionCounter(), check);
@@ -114,35 +115,6 @@ public class ViewSecurity {
             }
         });
 
-        JButton addButton = new JButton("Sell All");
-        addButton.setBounds(10, 100, 140, 25);
-        panel.add(addButton);
-
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JButton source = (JButton) e.getSource();
-                bc.sellAllStocks();
-                JOptionPane.showMessageDialog(source, "All Stocks sold successfully");
-                place(bc);
-                frame.dispose();
-            }
-        });
-
-        JButton withdrawButton = new JButton("View Profit");
-        withdrawButton.setBounds(10, 130, 140, 25);
-        panel.add(withdrawButton);
-
-        withdrawButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JButton source = (JButton) e.getSource();
-                bc.viewStockProfit();
-                JOptionPane.showMessageDialog(source, "Stock profit shown");
-            }
-        });
-
-
 
 
 
@@ -159,4 +131,7 @@ public class ViewSecurity {
             return false;
         }
     }
-}
+
+    }
+
+

@@ -78,7 +78,7 @@ public class Bank extends Login{
 
         frame.setVisible(false);
 
-        frame.setSize(325, 140);
+        frame.setSize(325, 180);
         JPanel panel = new JPanel();
         frame.getContentPane().removeAll();
         frame.getContentPane().add(panel);
@@ -136,6 +136,22 @@ public class Bank extends Login{
 
         });
 
+
+        //a button to randomly update the stock price
+        JButton updateStockMarket = new JButton("Stock update");
+        updateStockMarket.setBounds(10, 100, 140, 25);
+        panel.add(updateStockMarket);
+        updateStockMarket.addActionListener(new ActionListener() {
+            @Override
+
+            public void actionPerformed(ActionEvent e) {
+                JButton source = (JButton) e.getSource();
+                bk.updateStockMarket();
+                String[] fees = {"The stock market price has been updated "};
+                JOptionPane.showMessageDialog(source, fees);
+
+            }
+        });
     }
 
     //provides methods customers can perform, like viewAccounts, viewInfo,

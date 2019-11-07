@@ -1,0 +1,17 @@
+
+.idea/$PRODUCT_WORKSPACE_FILE$
+*.iml
+*.xml
+*.xml
+*.xml
+*.class
+src/com/company/Test.java
+.idea/misc.xml
+.idea/workspace.xml
+src/com/company/SQLConnection.java
+.idea/workspace.xml
+*.xml
+.idea/$PRODUCT_WORKSPACE_FILE$
+.idea/misc.xml
+.idea/workspace.xml
+FancyBank.iml
