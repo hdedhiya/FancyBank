@@ -66,11 +66,11 @@ public class ViewSecurity {
             }
         });
 
-        JButton addAccount = new JButton("View Market");
-        addAccount.setBounds(10, 40, 140, 25);
-        panel.add(addAccount);
+        JButton viewMarket = new JButton("View Market");
+        viewMarket.setBounds(10, 40, 140, 25);
+        panel.add(viewMarket);
 
-        addAccount.addActionListener(new ActionListener() {
+        viewMarket.addActionListener(new ActionListener() {
             @Override
 
             public void actionPerformed(ActionEvent e) {
@@ -81,36 +81,68 @@ public class ViewSecurity {
             }
         });
 
-        JButton deleteAccount = new JButton("Sell Stock");
-        deleteAccount.setBounds(10, 70, 140, 25);
-        panel.add(deleteAccount);
+        JButton sellStock = new JButton("Sell Stock");
+        sellStock.setBounds(10, 70, 140, 25);
+        panel.add(sellStock);
 
-        deleteAccount.addActionListener(new ActionListener() {
+        sellStock.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
                 int selected = table.getSelectedRow();
                 if (selected != -1) {
-                    Integer stock_index = (Integer) tabelModel.getValueAt(selected, 1);
-                    boolean checkBalance = checkEnough(bc.getAccount(stock_index).getBalance(), b.getCloseAccountFee());
-                    if (checkBalance) {
-                        Transaction check = bc.removeAccount(stock_index, b.getCloseAccountFee());
-                        if (check != null) {
-                            JOptionPane.showMessageDialog(source, "Account deleted");
-                            b.recentTransactions.put(b.getTransactionCounter(), check);
-                            b.setTransactionCounter(b.getTransactionCounter() + 1);
-                            place(bc);
-                            frame.dispose();
+                    String amtS = JOptionPane.showInputDialog("Enter number of shares to sell: ");
+                    int shares = (int) tabelModel.getValueAt(selected, 3); //name, code, price, share. share at col 3
+                    try {
+                        if (amtS != null && !amtS.isEmpty()) {
+                            int amt = Integer.parseInt(amtS);
+                            boolean canSell = checkEnough(amt, shares);
+                            if(canSell) {
+                                int newAmt = shares - amt;
+                                //query price on the choosing stock
+                                //update the shares, or remove that stock if all sold
+                                //update the database
+                                //todo
+                                JOptionPane.showMessageDialog(source, "Your stock is successfully sold");
+
+
+
+                            } else {
+                                JOptionPane.showMessageDialog(source, "You don't have enough shares to sell");
+                            }
                         } else {
-                            JOptionPane.showMessageDialog(source, "Account did not exist or did not belong to this customer");
+                            JOptionPane.showMessageDialog(source, "Please enter a valid amount of shares");
                         }
-                    } else {
-                        JOptionPane.showMessageDialog(source, "Insufficient funds in account to delete. The fee is: " + b.getCloseAccountFee());
+
+                    } catch (NumberFormatException e1) {
+                        JOptionPane.showMessageDialog(source, "Enter a valid number.");
+
                     }
-                }
-                else{
+                }else {
                     JOptionPane.showMessageDialog(source, "Please select a row.");
                 }
+//                int selected = table.getSelectedRow();
+//                if (selected != -1) {
+//                    Integer stock_index = (Integer) tabelModel.getValueAt(selected, 1);
+//                    boolean checkBalance = checkEnough(bc.getAccount(stock_index).getBalance(), b.getCloseAccountFee());
+//                    if (checkBalance) {
+//                        Transaction check = bc.removeAccount(stock_index, b.getCloseAccountFee());
+//                        if (check != null) {
+//                            JOptionPane.showMessageDialog(source, "Account deleted");
+//                            b.recentTransactions.put(b.getTransactionCounter(), check);
+//                            b.setTransactionCounter(b.getTransactionCounter() + 1);
+//                            place(bc);
+//                            frame.dispose();
+//                        } else {
+//                            JOptionPane.showMessageDialog(source, "Account did not exist or did not belong to this customer");
+//                        }
+//                    } else {
+//                        JOptionPane.showMessageDialog(source, "Insufficient funds in account to delete. The fee is: " + b.getCloseAccountFee());
+//                    }
+//                }
+//                else{
+//                    JOptionPane.showMessageDialog(source, "Please select a row.");
+//                }
             }
         });
 
@@ -151,12 +183,7 @@ public class ViewSecurity {
     }
 
 
-    public boolean checkEnough(double amt, double comparison){
-        if ((amt) > comparison){
-            return true;
-        }
-        else {
-            return false;
-        }
+    public boolean checkEnough(int amt, int comparison){
+        return !(amt > comparison);
     }
 }
