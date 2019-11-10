@@ -2,21 +2,29 @@ package com.company;
 
 //generic currenct class that is defined in Main and given to Bank on instantiation/
 public class Currency {
-    private CurrencyUnit unit;
-    public Currency(CurrencyUnit unit){
-        this.unit = unit;
+    private char icon;
+    private double conversionToBaseRate;
+    private String textName;
+    public Currency(char i, double rate, String n){
+        icon = i;
+        conversionToBaseRate = rate;
+        textName = n;
     }
 
     @Override
     public String toString() {
-        return unit + " " + unit.getIcon();
+        return textName + " " + icon;
+    }
+
+    public char getIcon() {
+        return icon;
     }
 
     public double getConversionToBaseRate() {
-        return unit.getConversionToBaseRate();
+        return conversionToBaseRate;
     }
 
     public String getTextName() {
-        return unit.toString();
+        return textName;
     }
 }

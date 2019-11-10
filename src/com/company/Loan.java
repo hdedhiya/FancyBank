@@ -4,26 +4,30 @@ package com.company;
 public class Loan extends Account {
     public Loan(double b, Currency c, double fee, double r){
         super(b,c, fee,r);
-        setAccountType(AccountType.LOANACCOUNT);
+        setAccountType("Loan");
     }
-
+    
+    public Loan(String accountType) {
+    	super(accountType);
+    }
+    
     @Override
     public Transaction applyInterest() {
-        double initB = getBalance();
-        if (initB < 0) {
-            addBalance(initB * getRate());
-            Transaction t = new Transaction(getAccountType(), getIndex(), "Apply Interest", initB, getBalance(), 0);
-            addTransaction(t);
-            return t;
-        }
-        else{
-            return null;
-        }
-
+//        double initB = getBalance();
+//        if (initB < 0) {
+//            addBalance(initB * getRate());
+//            Transaction t = new Transaction("Savings", getIndex(), "Apply Interest", initB, getBalance(), 0);
+//            addTransaction(t);
+//            return t;
+//        }
+//        else{
+//            return null;
+//        }
+        return null;
     }
 
     @Override
     public String toString() {
-        return getAccountType().toString() + this.getIndex() + " Balance: " + this.getBalance();
+        return "Loan Account " + this.getIndex() + " Balance: " + this.getBalance();
     }
 }

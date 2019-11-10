@@ -12,8 +12,12 @@ public abstract class Account {
     private Integer index;
     private LinkedHashMap<Integer, Transaction> ts;
     private Integer transactionCounter;
-    private AccountType accountType;
+    private String accountType;
 
+    public Account(String accountType) {
+    	this.accountType = accountType;
+    }
+    
     public Account(double b, Currency c, double fee, double r){
         transactionCounter = 0;
         balance = (b * c.getConversionToBaseRate()) - fee;
@@ -35,11 +39,11 @@ public abstract class Account {
         this.balance = balance;
     }
 
-    public AccountType getAccountType(){
+    public String getAccountType(){
         return accountType;
     }
 
-    public void setAccountType(AccountType aT){
+    public void setAccountType(String aT){
         accountType = aT;
     }
 
@@ -51,6 +55,10 @@ public abstract class Account {
         balance -= b;
     }
 
+    public void setIndex(int index) {
+    	this.index = index;
+    }
+    
     public Integer getIndex(){
         return index;
     }
@@ -71,4 +79,5 @@ public abstract class Account {
     public abstract Transaction applyInterest();
 
     public abstract String toString();
+
 }

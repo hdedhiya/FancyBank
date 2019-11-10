@@ -22,15 +22,15 @@ public class BankCustomer extends Customer {
         return accountList.get(accountNum);
     }
 
-    public Transaction removeAccount(Integer accountNum, double fee){
-        Account temp = accountList.remove(accountNum);
-        if (temp == null){
-            return null;
-        }
-        else{
-            return new Transaction(temp.getAccountType(), temp.getIndex(), "Account Deletion", temp.getBalance(), 0, fee);
-        }
-    }
+//    public Transaction removeAccount(Integer accountNum, double fee){
+//        Account temp = accountList.remove(accountNum);
+//        if (temp == null){
+//            return null;
+//        }
+//        else{
+//            return new Transaction(temp.getAccountType(), temp.getIndex(), "Account Deletion", temp.getBalance(), 0, fee);
+//        }
+//    }
 
     public Collection<Account> getAllAccounts(){
         return accountList.values();

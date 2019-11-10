@@ -1,10 +1,10 @@
 package com.company;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class ViewTransactions {
@@ -12,7 +12,7 @@ public class ViewTransactions {
     public ViewTransactions(Bank bb){
         b = bb;
     }
-        public void place(BankCustomer bc, Collection<Transaction> ts){
+        public void place(BankCustomer bc, Integer actNum){
         JFrame frame = new JFrame("FancyBank");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(false);
@@ -23,19 +23,25 @@ public class ViewTransactions {
 
         panel.setLayout(null);
 
-        Collection<Transaction> allTs = ts;
-
-        String cols[] = {"Account Type", "Account Number", "Transaction Type", "Initial Balance", "Final Balance", "Fees"};
+//        Collection<Transaction> allTs = ts;
+//
+        String cols[] = {"Account Type", "Account Number", "Transaction Type", "Initial Balance", "Final Balance", "Fees", "Date"};
         DefaultTableModel tabelModel = new DefaultTableModel(cols, 0){
             @Override
             public boolean isCellEditable(int row, int column){
                 return false;
             }
         };
+        
+        SQLConnection sc = new SQLConnection();
+		sc.TheSqlConnection();
+        ArrayList<Transaction> allTrans = sc.getTransactions(actNum);
 
-        for(Transaction a: allTs){
-            Object[] obj = {a.getAccountType(), a.getAccountNumber(), a.getTransactionType(), a.getInitBalance(), a.getFinalBalance(), a.getFee()};
-            tabelModel.addRow(obj);
+        if(allTrans.size() != 0) {
+        	for(int i = 0;i < allTrans.size();i++) {
+        		Object[] obj = {allTrans.get(i).getAccountType(), allTrans.get(i).getAccountNumber(), allTrans.get(i).getTransactionType(), allTrans.get(i).getInitBalance(), allTrans.get(i).getFinalBalance(), allTrans.get(i).getFee(), allTrans.get(i).getDate()};
+                tabelModel.addRow(obj);
+        	}
         }
 
         JTable table = new JTable(tabelModel);

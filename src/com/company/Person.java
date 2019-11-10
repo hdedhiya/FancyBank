@@ -4,10 +4,12 @@ package com.company;
 public class Person {
     private String username;
     private String password;
+    private String type;
 
     public Person (String u, String p){
         username = u;
         password = p;
+        type = "";
     }
 
     public String getUsername() {
@@ -21,4 +23,14 @@ public class Person {
     public void setPassword(String p){
         password = p;
     }
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String t) {
+		type = t;
+	}
+    
+    
 }
