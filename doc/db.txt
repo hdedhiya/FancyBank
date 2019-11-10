@@ -24,7 +24,8 @@ CREATE TABLE `transaction` (
   `transactionType` varchar(45) NOT NULL,
   `initBalance` varchar(45) NOT NULL,
   `finalBalance` varchar(45) NOT NULL,
-  `fee` varchar(45) NOT NULL
+  `fee` varchar(45) NOT NULL,
+  `date` DATE NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `stock` (
