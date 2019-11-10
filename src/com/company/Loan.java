@@ -13,17 +13,17 @@ public class Loan extends Account {
     
     @Override
     public Transaction applyInterest() {
-        double initB = getBalance();
-        if (initB < 0) {
-            addBalance(initB * getRate());
-            Transaction t = new Transaction("Savings", getIndex(), "Apply Interest", initB, getBalance(), 0);
-            addTransaction(t);
-            return t;
-        }
-        else{
-            return null;
-        }
-
+//        double initB = getBalance();
+//        if (initB < 0) {
+//            addBalance(initB * getRate());
+//            Transaction t = new Transaction("Savings", getIndex(), "Apply Interest", initB, getBalance(), 0);
+//            addTransaction(t);
+//            return t;
+//        }
+//        else{
+//            return null;
+//        }
+        return null;
     }
 
     @Override

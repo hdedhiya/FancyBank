@@ -7,13 +7,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 
-public class ViewRecent {
+public class BankerViewAccounts {
     Bank b;
-    public ViewRecent(Bank bb){
+    public BankerViewAccounts(Bank bb){
         b = bb;
     }
 
-    public void place(Banker bk, Collection<Transaction> ts){
+    public void place(Banker bk, Collection<Account> accs){
         JFrame frame = new JFrame("FancyBank");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(false);
@@ -24,9 +24,9 @@ public class ViewRecent {
 
         panel.setLayout(null);
 
-        Collection<Transaction> allTs = ts;
+        Collection<Account> allAccs = accs;
 
-        String cols[] = {"Account Type", "Account Number", "Transaction Type", "Initial Balance", "Final Balance", "Fees", "Date"};
+        String cols[] = {"Account Type", "Account Number", "Balance"};
         DefaultTableModel tabelModel = new DefaultTableModel(cols, 0){
             @Override
             public boolean isCellEditable(int row, int column){
@@ -34,8 +34,8 @@ public class ViewRecent {
             }
         };
 
-        for(Transaction a: allTs){
-            Object[] obj = {a.getAccountType(), a.getAccountNumber(), a.getTransactionType(), a.getInitBalance(), a.getFinalBalance(), a.getFee(), a.getDate()};
+        for(Account a: allAccs){
+            Object[] obj = {a.getAccountType(), a.getIndex(), a.getBalance()};
             tabelModel.addRow(obj);
         }
 
@@ -68,3 +68,4 @@ public class ViewRecent {
 //    }
     }
 }
+

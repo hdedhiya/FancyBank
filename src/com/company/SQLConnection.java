@@ -1,4 +1,5 @@
 package com.company;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -10,7 +11,7 @@ public class SQLConnection {
 	private static final String URL="jdbc:mysql://localhost:3306/fancybank?useUnicode=true&characterEncoding=utf8";
 	
 	private static final String NAME="root";//username
-	private static final String PASSWORD="zaqwsxcde4387";//password
+	private static final String PASSWORD="hd3d1337";//password
 	public java.sql.Connection conn = null;
 	
 	public void TheSqlConnection(){
@@ -195,10 +196,13 @@ public class SQLConnection {
 	
 	//add transaction
 	public void addTransaction(int accountNum, String accountType, String transactionType, String initBalance, String finalBalance, String fee) {
-		String sql = "insert into transaction (accountNum, accountType, transactionType, initBalance, finalBalance, fee) values (?, ?, ?, ?, ?, ?)"; 
+		long millis=System.currentTimeMillis();
+		java.sql.Date d=new java.sql.Date(millis);
+		String sql = "insert into transaction (accountNum, accountType, transactionType, initBalance, finalBalance, fee, date) values (?, ?, ?, ?, ?, ?, ?)";
 	    PreparedStatement pst = null;
 	    Account account = null;
-	    try {
+
+		try {
 	        pst = (PreparedStatement) conn.prepareStatement(sql);
 	        pst.setString(1, Integer.toString(accountNum));
 	        pst.setString(2, accountType);
@@ -206,6 +210,7 @@ public class SQLConnection {
 	        pst.setString(4, initBalance);
 	        pst.setString(5, finalBalance);
 	        pst.setString(6, fee);
+	        pst.setDate(7, d);
 	        pst.execute();
 	    }catch (Exception e) {
 	        System.out.println("Failed to add cutomer's transaction!");
@@ -228,7 +233,8 @@ public class SQLConnection {
 	        	double initBalance = rs.getDouble("initBalance");
 	        	double finalBalance = rs.getDouble("finalBalance");
 	        	double fee = rs.getDouble("fee");
-	        	transaction = new Transaction(accountType, accountNum, transactionType, initBalance, finalBalance, fee);
+	        	Date date = rs.getDate("date");
+	        	transaction = new Transaction(accountType, accountNum, transactionType, initBalance, finalBalance, fee, date);
 	            transactions.add(transaction);
 	        }
 	    }catch (Exception e) {
@@ -244,7 +250,71 @@ public class SQLConnection {
 	 * */
 	
 	//get banker
-	
+
+	public void applySavingsInterest(double interestRate, double minBalance){
+		String sql = "select * from account where accountType = 'Savings'";
+		PreparedStatement pst = null;
+		List<Account> accounts = new ArrayList<Account>();
+		try {
+			pst = (PreparedStatement) conn.prepareStatement(sql);
+			java.sql.ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				double balance = Double.parseDouble(rs.getString("balance"));
+				if (balance > minBalance){
+					updateAccount(rs.getInt("accountNum"), balance + balance*interestRate);
+					addTransaction(rs.getInt("accountNum"), "Savings", "Apply Interest", String.valueOf(balance), String.valueOf(balance + balance*interestRate), String.valueOf(0));
+				}
+			}
+		}catch (Exception e) {
+			System.out.println("don't get any");
+		}
+	}
+
+	public void applyLoanInterestRate(double interestRate){
+		String sql = "select * from account where accountType = 'Loan'";
+		PreparedStatement pst = null;
+		List<Account> accounts = new ArrayList<Account>();
+		try {
+			pst = (PreparedStatement) conn.prepareStatement(sql);
+			java.sql.ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				double balance = Double.parseDouble(rs.getString("balance"));
+				if (balance < 0) {
+					updateAccount(rs.getInt("accountNum"), balance + balance * interestRate);
+					addTransaction(rs.getInt("accountNum"), "Loan", "Apply Interest", String.valueOf(balance), String.valueOf(balance + balance * interestRate), String.valueOf(0));
+				}
+			}
+		}catch (Exception e) {
+			System.out.println("don't get any");
+		}
+	}
+
+	public ArrayList<Transaction> queryTransactionsByDate(Date d){
+		String sql = "select * from transaction where date = '" + d + "'";
+		PreparedStatement pst = null;
+		List<Transaction> transactions = new ArrayList<Transaction>();
+		try {
+			pst = (PreparedStatement) conn.prepareStatement(sql);
+			java.sql.ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				Transaction transaction = null;
+				String accountType = rs.getString("accountType");
+				int accountNum = rs.getInt("accountNum");
+				String transactionType = rs.getString("transactionType");
+				double initBalance = rs.getDouble("initBalance");
+				double finalBalance = rs.getDouble("finalBalance");
+				double fee = rs.getDouble("fee");
+				Date date = rs.getDate("date");
+				transaction = new Transaction(accountType, accountNum, transactionType, initBalance, finalBalance, fee, date);
+				transactions.add(transaction);
+			}
+		}catch (Exception e) {
+			System.out.println("don't get any");
+		}
+		return (ArrayList<Transaction>) transactions;
+	}
+
+
 	
 	public void insert(){
 	    

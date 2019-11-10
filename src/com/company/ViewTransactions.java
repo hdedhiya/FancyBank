@@ -25,7 +25,7 @@ public class ViewTransactions {
 
 //        Collection<Transaction> allTs = ts;
 //
-        String cols[] = {"Account Type", "Account Number", "Transaction Type", "Initial Balance", "Final Balance", "Fees"};
+        String cols[] = {"Account Type", "Account Number", "Transaction Type", "Initial Balance", "Final Balance", "Fees", "Date"};
         DefaultTableModel tabelModel = new DefaultTableModel(cols, 0){
             @Override
             public boolean isCellEditable(int row, int column){
@@ -39,7 +39,7 @@ public class ViewTransactions {
 
         if(allTrans.size() != 0) {
         	for(int i = 0;i < allTrans.size();i++) {
-        		Object[] obj = {allTrans.get(i).getAccountType(), allTrans.get(i).getAccountNumber(), allTrans.get(i).getTransactionType(), allTrans.get(i).getInitBalance(), allTrans.get(i).getFinalBalance(), allTrans.get(i).getFee()};
+        		Object[] obj = {allTrans.get(i).getAccountType(), allTrans.get(i).getAccountNumber(), allTrans.get(i).getTransactionType(), allTrans.get(i).getInitBalance(), allTrans.get(i).getFinalBalance(), allTrans.get(i).getFee(), allTrans.get(i).getDate()};
                 tabelModel.addRow(obj);
         	}
         }

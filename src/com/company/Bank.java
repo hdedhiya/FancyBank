@@ -4,6 +4,10 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Array;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -82,7 +86,7 @@ public class Bank extends Login{
 
         frame.setVisible(false);
 
-        frame.setSize(325, 140);
+        frame.setSize(365, 170);
         JPanel panel = new JPanel();
         frame.getContentPane().removeAll();
         frame.getContentPane().add(panel);
@@ -90,14 +94,14 @@ public class Bank extends Login{
         panel.setLayout(null);
 
         JLabel label = new JLabel("Hello " + bk.getUsername() + "!", JLabel.LEFT);
-        label.setBounds(10, 10, 140, 25);
+        label.setBounds(10, 10, 160, 25);
         panel.add(label);
 
         addBackToLoginButton(panel, frame);
         addChangePWButton(panel, frame, bk);
 
-        JButton viewTs = new JButton("View Transactions");
-        viewTs.setBounds(10, 70, 140, 25);
+        JButton viewTs = new JButton("Transactions by Date");
+        viewTs.setBounds(10, 70, 160, 25);
         panel.add(viewTs);
 
         //add to current selection
@@ -106,39 +110,122 @@ public class Bank extends Login{
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
                 //viewTransactionsOwner(frame, bk, recentTransactions.values());
-                ViewRecent vr = new ViewRecent(Bank.this);
-                vr.place(bk, recentTransactions.values());
-                recentTransactions.clear();
-                transactionCounter = 0;
-                frame.dispose();
+//                ViewRecent vr = new ViewRecent(Bank.this);
+//                vr.place(bk, recentTransactions.values());
+//                recentTransactions.clear();
+//                transactionCounter = 0;
+//
+                SQLConnection sc = new SQLConnection();
+                sc.TheSqlConnection();
+                String d = JOptionPane.showInputDialog("Enter date to query (Format: yyyy/MM/dd): ");
+                if (d != null) {
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+                    java.util.Date parsed = null;
+                    try {
+                        parsed = format.parse(d);
+                        java.sql.Date sql = new java.sql.Date(parsed.getTime());
+                        ArrayList<Transaction> ts = sc.queryTransactionsByDate(sql);
+                        ViewRecent vr = new ViewRecent(Bank.this);
+                        vr.place(bk, ts);
+                        //sc.queryTransactionsByDate()
+                        frame.dispose();
+                    } catch (ParseException ex) {
+                        JOptionPane.showMessageDialog(source, "Incorrect Format");
+                        //ex.printStackTrace();
+                    }
+                }
             }
         });
 
         JButton applyInterest = new JButton("Apply Interest");
-        applyInterest.setBounds(160, 70, 140, 25);
+        applyInterest.setBounds(180, 70, 160, 25);
         panel.add(applyInterest);
 
         applyInterest.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-                Collection<Person> customers = values();
-                for (Person p: customers){
-                    if (p instanceof BankCustomer){
-                        Collection<Account> accs = ((BankCustomer) p).getAllAccounts();
-                        for (Account a: accs){
-                            Transaction t = a.applyInterest();
-                            if (t != null){
-                                recentTransactions.put(transactionCounter, t);
-                                transactionCounter+=1;
-                            }
-                        }
-                    }
-                }
+                SQLConnection sc = new SQLConnection();
+                sc.TheSqlConnection();
+                sc.applySavingsInterest(savingsInterestRate, savingsMinAmount);
+                sc.applyLoanInterestRate(loanInterestRate);
+//                Collection<Person> customers = values();
+//                for (Person p: customers){
+//                    if (p instanceof BankCustomer){
+//                        Collection<Account> accs = ((BankCustomer) p).getAllAccounts();
+//                        for (Account a: accs){
+//                            Transaction t = a.applyInterest();
+//                            if (t != null){
+//                                recentTransactions.put(transactionCounter, t);
+//                                transactionCounter+=1;
+//                            }
+//                        }
+//                    }
+//                }
                 JOptionPane.showMessageDialog(source, "Applied Interest to valid accounts!");
             }
 
         });
+
+        JButton viewAccs = new JButton("Accounts by User");
+        viewAccs.setBounds(10, 100, 160, 25);
+        panel.add(viewAccs);
+
+        viewAccs.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton source = (JButton) e.getSource();
+                //viewTransactionsOwner(frame, bk, recentTransactions.values());
+//                ViewRecent vr = new ViewRecent(Bank.this);
+//                vr.place(bk, recentTransactions.values());
+//                recentTransactions.clear();
+//                transactionCounter = 0;
+//
+                SQLConnection sc = new SQLConnection();
+                sc.TheSqlConnection();
+                String d = JOptionPane.showInputDialog("Enter username: ");
+                if (d != null) {
+                    ArrayList<Account> ts = sc.getAccounts(d);
+                    BankerViewAccounts bva = new BankerViewAccounts(Bank.this);
+                    bva.place(bk, ts);
+                    frame.dispose();
+                }
+            }
+        });
+
+
+
+        JButton viewTransactions = new JButton("Transactions by Acc");
+        viewTransactions.setBounds(180, 100, 160, 25);
+        panel.add(viewTransactions);
+
+        viewTransactions.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton source = (JButton) e.getSource();
+                //viewTransactionsOwner(frame, bk, recentTransactions.values());
+//                ViewRecent vr = new ViewRecent(Bank.this);
+//                vr.place(bk, recentTransactions.values());
+//                recentTransactions.clear();
+//                transactionCounter = 0;
+//
+                SQLConnection sc = new SQLConnection();
+                sc.TheSqlConnection();
+                String d = JOptionPane.showInputDialog("Enter account number: ");
+                if (d != null) {
+                    try {
+                        ArrayList<Transaction> ts = sc.getTransactions(Integer.valueOf(d));
+                        ViewRecent vr = new ViewRecent(Bank.this);
+                        vr.place(bk, ts);
+                        frame.dispose();
+                    }
+                    catch(NumberFormatException ex){
+                        JOptionPane.showMessageDialog(source, "Enter a valid number!");
+                    }
+                }
+            }
+        });
+
 
     }
 
@@ -152,7 +239,7 @@ public class Bank extends Login{
 
         frame.setVisible(false);
 
-        frame.setSize(325, 140);
+        frame.setSize(365, 140);
         JPanel panel = new JPanel();
         frame.getContentPane().removeAll();
         frame.getContentPane().add(panel);
@@ -168,7 +255,7 @@ public class Bank extends Login{
         panel.add(label);
 
         JButton viewAccounts = new JButton("View Accounts");
-        viewAccounts.setBounds(10, 70, 140, 25);
+        viewAccounts.setBounds(10, 70, 160, 25);
         panel.add(viewAccounts);
         viewAccounts.addActionListener(new ActionListener() {
             @Override
@@ -181,7 +268,7 @@ public class Bank extends Login{
         });
 
         JButton viewInfo = new JButton("Rates and fees");
-        viewInfo.setBounds(160, 70, 140, 25);
+        viewInfo.setBounds(180, 70, 160, 25);
         panel.add(viewInfo);
         viewInfo.addActionListener(new ActionListener() {
             @Override
@@ -204,7 +291,7 @@ public class Bank extends Login{
     public void addBackToLoginButton(JPanel panel, JFrame frame){
 
         JButton backButton = new JButton("Back");
-        backButton.setBounds(10, 40, 140, 25);
+        backButton.setBounds(10, 40, 160, 25);
         panel.add(backButton);
 
         backButton.addActionListener(new ActionListener() {
@@ -218,7 +305,7 @@ public class Bank extends Login{
 
     public void addChangePWButton(JPanel panel, JFrame frame, Person p){
         JButton changePWButton = new JButton("Change PW");
-        changePWButton.setBounds(160, 40, 140, 25);
+        changePWButton.setBounds(180, 40, 160, 25);
         panel.add(changePWButton);
 
         frame.setVisible(true);

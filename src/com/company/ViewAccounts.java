@@ -414,11 +414,11 @@ public class ViewAccounts{
                                                     double initB = bc.getAccount(account_index).getBalance();
                                                     bc.getAccount(account_index).removeBalance((amt * c.getConversionToBaseRate()) + b.getCheckingAccountTransactionFee());
                                                     bc.getAccount(alt_index).addBalance((amt * c.getConversionToBaseRate()));
-                                                    bc.getAccount(account_index).addTransaction(new Transaction("Checking", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), b.getCheckingAccountTransactionFee()));
-                                                    b.recentTransactions.put(b.getTransactionCounter(), new Transaction("Checking", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), b.getCheckingAccountTransactionFee()));
+                                                  //  bc.getAccount(account_index).addTransaction(new Transaction("Checking", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), b.getCheckingAccountTransactionFee()));
+                                                 //   b.recentTransactions.put(b.getTransactionCounter(), new Transaction("Checking", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), b.getCheckingAccountTransactionFee()));
                                                     b.setTransactionCounter(b.getTransactionCounter() + 1);
-                                                    a.addTransaction(new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
-                                                    b.recentTransactions.put(b.getTransactionCounter(), new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
+                                                  //  a.addTransaction(new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
+                                                 //   b.recentTransactions.put(b.getTransactionCounter(), new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
                                                     b.setTransactionCounter(b.getTransactionCounter() + 1);
                                                 } else {
                                                     JOptionPane.showMessageDialog(source, "Other account does not exist or does not belong to the user.");
@@ -440,11 +440,11 @@ public class ViewAccounts{
                                                     double initB = bc.getAccount(account_index).getBalance();
                                                     bc.getAccount(account_index).removeBalance((amt * c.getConversionToBaseRate()));
                                                     bc.getAccount(alt_index).addBalance((amt * c.getConversionToBaseRate()));
-                                                    bc.getAccount(account_index).addTransaction(new Transaction("Savings", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), 0));
-                                                    b.recentTransactions.put(b.getTransactionCounter(), new Transaction("Savings", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), 0));
+                                                   // bc.getAccount(account_index).addTransaction(new Transaction("Savings", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), 0));
+                                                  //  b.recentTransactions.put(b.getTransactionCounter(), new Transaction("Savings", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), 0));
                                                     b.setTransactionCounter(b.getTransactionCounter() + 1);
-                                                    a.addTransaction(new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
-                                                    b.recentTransactions.put(b.getTransactionCounter(), new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
+                                                  //  a.addTransaction(new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
+                                                  //  b.recentTransactions.put(b.getTransactionCounter(), new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
                                                     b.setTransactionCounter(b.getTransactionCounter() + 1);
                                                 } else {
                                                     JOptionPane.showMessageDialog(source, "Other account does not exist or does not belong to the user.");
@@ -512,11 +512,11 @@ public class ViewAccounts{
                                             double initB = bc.getAccount(account_index).getBalance();
                                             a.removeBalance((amt * c.getConversionToBaseRate()) + b.getCheckingAccountTransactionFee());
                                             bc.getAccount(account_index).addBalance((amt * c.getConversionToBaseRate()));
-                                            bc.getAccount(account_index).addTransaction(new Transaction(bc.getAccount(account_index).getAccountType(), bc.getAccount(account_index).getIndex(), "Transfer to", initB, bc.getAccount(account_index).getBalance(), 0));
-                                            b.recentTransactions.put(b.getTransactionCounter(), new Transaction(bc.getAccount(account_index).getAccountType(), bc.getAccount(account_index).getIndex(), "Transfer to", initB, bc.getAccount(account_index).getBalance(), 0));
+                                            //bc.getAccount(account_index).addTransaction(new Transaction(bc.getAccount(account_index).getAccountType(), bc.getAccount(account_index).getIndex(), "Transfer to", initB, bc.getAccount(account_index).getBalance(), 0));
+                                            //b.recentTransactions.put(b.getTransactionCounter(), new Transaction(bc.getAccount(account_index).getAccountType(), bc.getAccount(account_index).getIndex(), "Transfer to", initB, bc.getAccount(account_index).getBalance(), 0));
                                             b.setTransactionCounter(b.getTransactionCounter() + 1);
-                                            a.addTransaction(new Transaction(a.getAccountType(), a.getIndex(), "Transfer from", initBa, a.getBalance(), b.getCheckingAccountTransactionFee()));
-                                            b.recentTransactions.put(b.getTransactionCounter(), new Transaction(a.getAccountType(), a.getIndex(), "Transfer from", initBa, a.getBalance(), b.getCheckingAccountTransactionFee()));
+                                            //a.addTransaction(new Transaction(a.getAccountType(), a.getIndex(), "Transfer from", initBa, a.getBalance(), b.getCheckingAccountTransactionFee()));
+                                           // b.recentTransactions.put(b.getTransactionCounter(), new Transaction(a.getAccountType(), a.getIndex(), "Transfer from", initBa, a.getBalance(), b.getCheckingAccountTransactionFee()));
                                             b.setTransactionCounter(b.getTransactionCounter() + 1);
                                         } else {
                                             JOptionPane.showMessageDialog(source, "Insufficient funds. The checking account transaction fee is " + b.getCheckingAccountTransactionFee() + ".");
@@ -527,11 +527,11 @@ public class ViewAccounts{
                                             double initB = bc.getAccount(account_index).getBalance();
                                             a.removeBalance((amt * c.getConversionToBaseRate()));
                                             bc.getAccount(account_index).addBalance((amt * c.getConversionToBaseRate()));
-                                            bc.getAccount(account_index).addTransaction(new Transaction(bc.getAccount(account_index).getAccountType(), bc.getAccount(account_index).getIndex(), "Transfer to", initB, bc.getAccount(account_index).getBalance(), 0));
-                                            b.recentTransactions.put(b.getTransactionCounter(), new Transaction(bc.getAccount(account_index).getAccountType(), bc.getAccount(account_index).getIndex(), "Transfer to", initB, bc.getAccount(account_index).getBalance(), 0));
+                                           // bc.getAccount(account_index).addTransaction(new Transaction(bc.getAccount(account_index).getAccountType(), bc.getAccount(account_index).getIndex(), "Transfer to", initB, bc.getAccount(account_index).getBalance(), 0));
+                                           // b.recentTransactions.put(b.getTransactionCounter(), new Transaction(bc.getAccount(account_index).getAccountType(), bc.getAccount(account_index).getIndex(), "Transfer to", initB, bc.getAccount(account_index).getBalance(), 0));
                                             b.setTransactionCounter(b.getTransactionCounter() + 1);
-                                            a.addTransaction(new Transaction(a.getAccountType(), a.getIndex(), "Transfer from", initBa, a.getBalance(), 0));
-                                            b.recentTransactions.put(b.getTransactionCounter(), new Transaction(a.getAccountType(), a.getIndex(), "Transfer from", initBa, a.getBalance(), 0));
+                                           // a.addTransaction(new Transaction(a.getAccountType(), a.getIndex(), "Transfer from", initBa, a.getBalance(), 0));
+                                           // b.recentTransactions.put(b.getTransactionCounter(), new Transaction(a.getAccountType(), a.getIndex(), "Transfer from", initBa, a.getBalance(), 0));
                                             b.setTransactionCounter(b.getTransactionCounter() + 1);
                                         } else {
                                             JOptionPane.showMessageDialog(source, "Insufficient funds.");
@@ -589,26 +589,26 @@ public class ViewAccounts{
         resolveLoans.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JButton source = (JButton) e.getSource();
-                Collection<Account> accs = bc.getAllAccounts();
-                ArrayList<Integer> indexes = new ArrayList<>();
-                for (Account a:accs){
-                    if (a instanceof Loan){
-                        if (a.getBalance() >= b.getCloseAccountFee()){
-                            indexes.add(a.getIndex());
-                        }
-                    }
-                }
-                for (int i=0; i<indexes.size(); i++){
-                    Transaction check = bc.removeAccount(indexes.get(i), b.getCloseAccountFee());
-                    if (check != null) {
-                        b.recentTransactions.put(b.getTransactionCounter(), check);
-                        b.setTransactionCounter(b.getTransactionCounter() + 1);
-                    }
-                }
-                JOptionPane.showMessageDialog(source, "All loans with balances greater than the close account fee: " + b.getCloseAccountFee() + " were closed.");
-                place(bc);
-                frame.dispose();
+//                JButton source = (JButton) e.getSource();
+//                Collection<Account> accs = bc.getAllAccounts();
+//                ArrayList<Integer> indexes = new ArrayList<>();
+//                for (Account a:accs){
+//                    if (a instanceof Loan){
+//                        if (a.getBalance() >= b.getCloseAccountFee()){
+//                            indexes.add(a.getIndex());
+//                        }
+//                    }
+//                }
+//                for (int i=0; i<indexes.size(); i++){
+//                    Transaction check = bc.removeAccount(indexes.get(i), b.getCloseAccountFee());
+//                    if (check != null) {
+//                        b.recentTransactions.put(b.getTransactionCounter(), check);
+//                        b.setTransactionCounter(b.getTransactionCounter() + 1);
+//                    }
+//                }
+//                JOptionPane.showMessageDialog(source, "All loans with balances greater than the close account fee: " + b.getCloseAccountFee() + " were closed.");
+//                place(bc);
+//                frame.dispose();
             }
         });
 
