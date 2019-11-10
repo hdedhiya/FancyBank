@@ -612,7 +612,20 @@ public class ViewAccounts{
             }
         });
 
+        JButton viewStock = new JButton("View My Stocks");
+        viewStock.setBounds(10, 280, 140, 25);
+        panel.add(viewStock);
 
+
+        viewStock.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton source = (JButton) e.getSource();
+                ViewSecurity vs = new ViewSecurity(b);
+                vs.place(bc);
+                frame.dispose();
+            }
+        });
 
 
         frame.getContentPane().add(splitPane);

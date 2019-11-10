@@ -39,7 +39,6 @@ public class StockMarket {
 
     public double sellStock(Stock stock){
         Iterator<Stock> it= stockMarket.iterator();
-
         while(it.hasNext()){
             Stock s =it.next();
             if(s.getName().equals(stock.getName())&&s.getCode().equals(stock.getCode())){
@@ -47,7 +46,7 @@ public class StockMarket {
                 return stock.getShares()*s.getPrice();
             }
         }
-        return 0.0;
+        return -1;
     }
 
     @Override

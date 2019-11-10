@@ -1,4 +1,5 @@
 package com.company;
+
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,7 +12,7 @@ public class SQLConnection {
 	private static final String URL="jdbc:mysql://localhost:3306/fancybank?useUnicode=true&characterEncoding=utf8";
 	
 	private static final String NAME="root";//username
-	private static final String PASSWORD="hd3d1337";//password
+	private static final String PASSWORD="xjz950724";//password
 	public java.sql.Connection conn = null;
 	
 	public void TheSqlConnection(){
@@ -31,10 +32,6 @@ public class SQLConnection {
 	        e.printStackTrace();
 	    }
 	}
-	
-	/**
-	 * common functions that are relevant to the information of user in db
-	 * */
 	
 	//user login
 	public Person getUser(String u, String p) {

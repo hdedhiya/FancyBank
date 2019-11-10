@@ -35,4 +35,18 @@ public class BankCustomer extends Customer {
     public Collection<Account> getAllAccounts(){
         return accountList.values();
     }
+
+    public void sellAllStocks() {
+        //todo
+        //bank customer has the feature to sell all stocks
+        System.out.println("sellAll function in development");
+    }
+
+    public void viewStockProfit() {
+        //todo
+        //bank customer has the feature to view all stock profit
+        System.out.println("viewProfit function in development");
+
+
+    }
 }
