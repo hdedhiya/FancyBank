@@ -76,7 +76,9 @@ public class ViewMarket {
 
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-
+                //todo
+                //buy chosen stock. ask for shares. check for purchasing power
+                //update after buying successfully
             }
         });
 
@@ -92,22 +94,8 @@ public class ViewMarket {
                 JButton source = (JButton) e.getSource();
                 int selected = table.getSelectedRow();
                 if (selected != -1) {
-                    Integer account_index = (Integer) tabelModel.getValueAt(selected, 1);
-                    boolean checkBalance = checkEnough(bc.getAccount(account_index).getBalance(), b.getCloseAccountFee());
-                    if (checkBalance) {
-                        Transaction check = bc.removeAccount(account_index, b.getCloseAccountFee());
-                        if (check != null) {
-                            JOptionPane.showMessageDialog(source, "Account deleted");
-                            b.recentTransactions.put(b.getTransactionCounter(), check);
-                            b.setTransactionCounter(b.getTransactionCounter() + 1);
-                            place(bc);
-                            frame.dispose();
-                        } else {
-                            JOptionPane.showMessageDialog(source, "Account did not exist or did not belong to this customer");
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(source, "Insufficient funds in account to delete. The fee is: " + b.getCloseAccountFee());
-                    }
+                    //todo
+                    //detail
                 }
                 else{
                     JOptionPane.showMessageDialog(source, "Please select a row.");
