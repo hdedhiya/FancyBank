@@ -23,7 +23,16 @@ public class StockMarket {
         }
         return -2;//the stock does not exist
     }
-
+    public double queryProfit(String name,String code,int share, double p){
+        Iterator<Stock> it= stockMarket.iterator();
+        while(it.hasNext()){
+            Stock s =it.next();
+            if(s.getName().equals(name)&&s.getCode().equals(code)){
+                return s.getShares()*s.getPrice()-share*p;
+            }
+        }
+        return 0;//the stock does not exist
+    }
     public Stock buyStock(String name,String code,int shares){
         Iterator<Stock> it= stockMarket.iterator();
 

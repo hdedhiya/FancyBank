@@ -28,6 +28,15 @@ public class SecurityAccount {
             return (int)result;//-1 for not enough shares; -2 for stock not exists
         }
     }
+    public double viewProfit(){
+        Iterator<Stock> iterator=stocks.iterator();
+        double profit=0;
+        while(iterator.hasNext()){
+            Stock s=iterator.next();
+            profit+=stockMarket.queryProfit(s.getName(),s.getCode(),s.getShares(),s.getPrice());
+        }
+        return profit;
+    }
 
     public double sellStock(String name,String code){
         Iterator<Stock> iterator=stocks.iterator();
@@ -74,5 +83,8 @@ public class SecurityAccount {
             i+=1;
         }
         return str;
+    }
+    public String viewMarket(){
+        return stockMarket.toString();
     }
 }
