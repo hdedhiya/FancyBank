@@ -16,4 +16,10 @@ public enum AccountType {
     public String toString() {
         return accountText;
     }
+
+    public static AccountType getTypeByString(String s) {
+        if (s.equals("Savings")) return AccountType.SAVINGACCOUNT;
+        else if (s.equals("Checking")) return AccountType.CHECHINGACCOUNT;
+        else return AccountType.LOANACCOUNT;
+    }
 }

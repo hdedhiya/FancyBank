@@ -28,7 +28,9 @@ public class ViewMarket {
 
         // pull down the stockmarket from database
         //Collection<Stock> allStocks = new StockMarket().stockMarket;
-        Collection<Stock> allStocks = new ArrayList<>();
+        SQLConnection sc = new SQLConnection();
+        sc.TheSqlConnection();
+        Collection<Stock> market = new ArrayList<>();
         String cols[] = {"Company Name", "Code", "Price", "Share"};
         DefaultTableModel tabelModel = new DefaultTableModel(cols, 0){
             @Override
@@ -37,7 +39,7 @@ public class ViewMarket {
             }
         };
 
-        for(Stock s: allStocks){
+        for(Stock s: market){
             Object[] obj = {s.getName(), s.getCode(), s.getPrice(), s.getShares()};
             tabelModel.addRow(obj);
         }

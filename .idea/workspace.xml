@@ -2,19 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5d9d6c1a-0f84-41ea-8c1d-337fbb4a4822" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FancyBank.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FancyBank.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/db.txt" beforeDir="false" afterPath="$PROJECT_DIR$/doc/db.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Account.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/AccountType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/AccountType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Checking.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Checking.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Loan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Loan.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/SQLConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/SQLConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Savings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Savings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Transaction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/ViewAccounts.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/ViewAccounts.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/ViewSecurity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/ViewSecurity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/ViewMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/ViewMarket.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

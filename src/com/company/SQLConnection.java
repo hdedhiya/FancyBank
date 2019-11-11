@@ -104,7 +104,7 @@ public class SQLConnection {
 	        while (rs.next()) {
 	        	Account account = null;
 	        	String aT = rs.getString("accountType");
-	        	AccountType accountType = AccountType.valueOf(aT);
+	        	AccountType accountType = AccountType.getTypeByString(aT);
 	        	if(accountType == AccountType.CHECHINGACCOUNT) {
 	        		account = new Checking(accountType);
 	        	}else if(accountType == AccountType.SAVINGACCOUNT) {
@@ -151,7 +151,7 @@ public class SQLConnection {
 			java.sql.ResultSet rs = pst.executeQuery();
 	        while (rs.next()) {
 				String aT = rs.getString("accountType");
-				AccountType accountType = AccountType.valueOf(aT);
+				AccountType accountType = AccountType.getTypeByString(aT);
 				if(accountType == AccountType.CHECHINGACCOUNT) {
 					account = new Checking(accountType);
 				}else if(accountType == AccountType.SAVINGACCOUNT) {
@@ -227,7 +227,7 @@ public class SQLConnection {
 	        while (rs.next()) {
 	        	Transaction transaction = null;
 	        	String aT = rs.getString("accountType");
-	        	AccountType accountType = AccountType.valueOf(aT);
+	        	AccountType accountType = AccountType.getTypeByString(aT);
 	        	int accountNum = rs.getInt("accountNum");
 	        	String transactionType = rs.getString("transactionType");
 	        	double initBalance = rs.getDouble("initBalance");
@@ -299,7 +299,7 @@ public class SQLConnection {
 			while (rs.next()) {
 				Transaction transaction = null;
 				String aT = rs.getString("accountType");
-				AccountType accountType = AccountType.valueOf(aT);
+				AccountType accountType = AccountType.getTypeByString(aT);
 				int accountNum = rs.getInt("accountNum");
 				String transactionType = rs.getString("transactionType");
 				double initBalance = rs.getDouble("initBalance");
