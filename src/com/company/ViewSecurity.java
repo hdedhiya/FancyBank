@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.SortedSet;
 
 public class ViewSecurity {
     private Bank b;
@@ -15,7 +16,7 @@ public class ViewSecurity {
     public ViewSecurity(Bank bb){
         b = bb;
     }
-    public void place(BankCustomer bc){
+    public void place(BankCustomer bc, Savings savingAccount){
         JFrame frame = new JFrame("FancyBank Security Account");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(false);
@@ -31,9 +32,11 @@ public class ViewSecurity {
 
         SQLConnection sc = new SQLConnection();
         sc.TheSqlConnection();
-        ArrayList<Stock> allStocks = sc.getStocks(bc.getUsername());
+        ArrayList<Stock> allStocks = sc.getStocks(savingAccount.getIndex());
+        StockMarket market = new StockMarket();
+        SecurityAccount securityAccount = new SecurityAccount(allStocks, market, savingAccount);
 
-        String cols[] = {"Company Name", "Code", "Price", "Share"};
+        String cols[] = {"Stock Number", "Company Name", "Code", "Price", "Share"};
         DefaultTableModel tabelModel = new DefaultTableModel(cols, 0){
             @Override
             public boolean isCellEditable(int row, int column){
@@ -42,7 +45,7 @@ public class ViewSecurity {
         };
 
         for(Stock s: allStocks){
-            Object[] obj = {s.getName(), s.getCode(), s.getPrice(), s.getShares()};
+            Object[] obj = {s.getIndex(), s.getName(), s.getCode(), s.getPrice(), s.getShares()};
             tabelModel.addRow(obj);
         }
 
@@ -80,7 +83,7 @@ public class ViewSecurity {
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
                 ViewMarket vm = new ViewMarket(b);
-                vm.place(bc);
+                vm.place(bc, savingAccount);
                 frame.dispose();
             }
         });
@@ -96,24 +99,29 @@ public class ViewSecurity {
                 int selected = table.getSelectedRow();
                 if (selected != -1) {
                     String amtS = JOptionPane.showInputDialog("Enter number of shares to sell: ");
-                    int shares = (int) tabelModel.getValueAt(selected, 4); //stockNum, name, code, price, share. share at col 3
-                    int stockNum = (int) tabelModel.getValueAt(selected, 0); //stockNum at 0
+                    int index = (int) tabelModel.getValueAt(selected, 0);
+                    String name = (String) tabelModel.getValueAt(selected, 1);
+                    String code = (String) tabelModel.getValueAt(selected, 2);
+                    int shares = (int) tabelModel.getValueAt(selected, 4);
+
                     try {
                         if (amtS != null && !amtS.isEmpty()) {
                             int amt = Integer.parseInt(amtS);
                             boolean canSell = checkEnough(amt, shares);
                             if(canSell) {
+                                //securityAccount.sellStock(name, code);
                                 //connect to db
                                 SQLConnection sc = new SQLConnection();
                                 sc.TheSqlConnection();
                                 int newAmt = shares - amt;
-                                sc.updateStock(stockNum, newAmt);
+                                sc.updateStock(index, newAmt);
+                                double sellPrice = securityAccount.queryPrice(name, code, amt);
 
+                                sc.updateAccount(savingAccount.getIndex(), savingAccount.getBalance() + sellPrice);
+                                ViewSecurity vs = new ViewSecurity(b);
+                                vs.place(bc, savingAccount);
+                                frame.dispose();
 
-                                //query price on the choosing stock
-                                //update the shares, or remove that stock if all sold
-                                //update the database
-                                //todo
                                 JOptionPane.showMessageDialog(source, "Your stock is successfully sold");
 
 
@@ -132,28 +140,7 @@ public class ViewSecurity {
                 }else {
                     JOptionPane.showMessageDialog(source, "Please select a row.");
                 }
-//                int selected = table.getSelectedRow();
-//                if (selected != -1) {
-//                    Integer stock_index = (Integer) tabelModel.getValueAt(selected, 1);
-//                    boolean checkBalance = checkEnough(bc.getAccount(stock_index).getBalance(), b.getCloseAccountFee());
-//                    if (checkBalance) {
-//                        Transaction check = bc.removeAccount(stock_index, b.getCloseAccountFee());
-//                        if (check != null) {
-//                            JOptionPane.showMessageDialog(source, "Account deleted");
-//                            b.recentTransactions.put(b.getTransactionCounter(), check);
-//                            b.setTransactionCounter(b.getTransactionCounter() + 1);
-//                            place(bc);
-//                            frame.dispose();
-//                        } else {
-//                            JOptionPane.showMessageDialog(source, "Account did not exist or did not belong to this customer");
-//                        }
-//                    } else {
-//                        JOptionPane.showMessageDialog(source, "Insufficient funds in account to delete. The fee is: " + b.getCloseAccountFee());
-//                    }
-//                }
-//                else{
-//                    JOptionPane.showMessageDialog(source, "Please select a row.");
-//                }
+//
             }
         });
 
@@ -165,13 +152,17 @@ public class ViewSecurity {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-                bc.sellAllStocks();
-                String username = bc.getUsername();
+
+                double profit = securityAccount.queryPriceForAll();
+                for(Stock stock : allStocks) {
+                    sc.deleteStock(stock.getIndex());
+                }
                 SQLConnection sc = new SQLConnection();
                 sc.TheSqlConnection();
-                sc.sellAllStock(username);
+                sc.sellAllStock(savingAccount.getIndex());
+                sc.updateAccount(savingAccount.getIndex(), savingAccount.getBalance() + profit);
                 JOptionPane.showMessageDialog(source, "All Stocks sold successfully");
-                place(bc);
+                place(bc, savingAccount);
                 frame.dispose();
             }
         });
@@ -184,11 +175,16 @@ public class ViewSecurity {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-                bc.viewStockProfit();
-                JOptionPane.showMessageDialog(source, "Stock profit shown");
+                double profit = securityAccount.queryPriceForAll();
+                double allPrice = 0;
+                for(Stock stock : allStocks) {
+                    allPrice += stock.getPrice() * stock.getShares();
+                }
+                JOptionPane.showMessageDialog(source, "Your profit is " + (profit-allPrice));
+
 
                 //todo
-                //show profit in massagedialog or label
+
 
             }
         });

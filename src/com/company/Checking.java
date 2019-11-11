@@ -4,7 +4,7 @@ package com.company;
 public class Checking extends Account {
     public Checking(double b, Currency c, double fee, double r){
         super(b,c, fee, r);
-        setAccountType(AccountType.CHECHINGACCOUNT);
+        setAccountType(AccountType.CHECKINGACCOUNT);
     }
     
     public Checking(AccountType accountType) {

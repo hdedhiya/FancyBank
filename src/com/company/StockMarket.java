@@ -1,12 +1,16 @@
 package com.company;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class StockMarket {
     ArrayList<Stock> stockMarket;
-    public StockMarket(ArrayList<Stock> sm){
-        stockMarket=sm;
+    public StockMarket(){
+        SQLConnection sc = new SQLConnection();
+        sc.TheSqlConnection();
+        stockMarket = sc.getMarket();
+        sc.close();
     }
 
     public double queryPrice(String name, String code,int shares){

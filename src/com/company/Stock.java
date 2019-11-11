@@ -1,6 +1,7 @@
 package com.company;
 
 public class Stock {
+    private int index;
     private String name;
     private Double price;
     private String code;
@@ -10,6 +11,7 @@ public class Stock {
         this.code=code;
         price=0.0;
         shares=0;
+        index = -1;
     }
     public Stock(String name,String code,Double price,Integer shares){
         this.name=name;
@@ -47,6 +49,14 @@ public class Stock {
 
     public void setShares(Integer shares) {
         this.shares = shares;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     @Override

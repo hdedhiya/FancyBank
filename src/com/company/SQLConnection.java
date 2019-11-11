@@ -105,7 +105,7 @@ public class SQLConnection {
 	        	Account account = null;
 	        	String aT = rs.getString("accountType");
 	        	AccountType accountType = AccountType.getTypeByString(aT);
-	        	if(accountType == AccountType.CHECHINGACCOUNT) {
+	        	if(accountType == AccountType.CHECKINGACCOUNT) {
 	        		account = new Checking(accountType);
 	        	}else if(accountType == AccountType.SAVINGACCOUNT) {
 	        		account = new Savings(accountType);
@@ -152,7 +152,7 @@ public class SQLConnection {
 	        while (rs.next()) {
 				String aT = rs.getString("accountType");
 				AccountType accountType = AccountType.getTypeByString(aT);
-				if(accountType == AccountType.CHECHINGACCOUNT) {
+				if(accountType == AccountType.CHECKINGACCOUNT) {
 					account = new Checking(accountType);
 				}else if(accountType == AccountType.SAVINGACCOUNT) {
 					account = new Savings(accountType);
@@ -316,20 +316,20 @@ public class SQLConnection {
 	}
 
 	//add stock to my stock list after buying
-	public boolean addStock(String u, String p, String t, double q, int r) {
+	public boolean addStock(int accountNum, String companyName, String code, double price, int share) {
 		boolean success = true;
-		String sql = "insert into stock (username, companyName, code, price, share) values (?, ?, ?, ?, ?)";
+		String sql = "insert into stock (accountNum, companyName, code, price, share) values (?, ?, ?, ?, ?)";
 		PreparedStatement pst = null;
 		try {
 			pst = (PreparedStatement)conn.prepareStatement(sql);
-			pst.setString(1, u);
-			pst.setString(2, p);
-			pst.setString(3, t);
-			pst.setString(4, Double.toString(q));
-			pst.setString(5, Integer.toString(r));
+			pst.setString(1, Integer.toString(accountNum));
+			pst.setString(2, companyName);
+			pst.setString(3, code);
+			pst.setString(4, Double.toString(price));
+			pst.setString(5, Integer.toString(share));
 			pst.execute();
 		}catch(Exception e) {
-			System.out.println("Failed to add " + t + " !");
+			System.out.println("Failed to add " + code + " !");
 			success = false;
 		}
 		return success;
@@ -387,14 +387,15 @@ public class SQLConnection {
 		}
 	}
 
-	public void sellAllStock(String username) {
-		String sql = "delete * from stock where username = '" + username + "'";
+	public void sellAllStock(int accountNum) {
+
+		String sql = "delete * from stock where accountNum = '" + accountNum + "'";
 		PreparedStatement pst = null;
 		try {
 			pst = (PreparedStatement) conn.prepareStatement(sql);
 			pst.execute();
 		} catch (Exception e) {
-			System.out.println("Failed to delete all Stock for " + username);
+			System.out.println("Failed to delete all Stock");
 		}
 	}
 
@@ -410,8 +411,8 @@ public class SQLConnection {
 	}
 
 	//get customers accounts
-	public ArrayList<Stock> getStocks(String u){
-		String sql = "select * from stock where username = '" + u + "'";
+	public ArrayList<Stock> getStocks(int accountNum){
+		String sql = "select * from stock where accountNum = '" + accountNum + "'";
 		PreparedStatement pst = null;
 		List<Stock> stocks = new ArrayList<Stock>();
 		try {
@@ -419,11 +420,13 @@ public class SQLConnection {
 			java.sql.ResultSet rs = pst.executeQuery();
 			while (rs.next()) {
 				Stock stock = null;
+				int stockNum = Integer.parseInt(rs.getString("stockNum"));
 				String companyName = rs.getString("companyName");
 				String code = rs.getString("code");
 				double price = Double.parseDouble(rs.getString("price"));
 				int share = Integer.parseInt(rs.getString("share"));
 				stock = new Stock(companyName, code, price, share);
+				stock.setIndex(stockNum);
 				stocks.add(stock);
 			}
 		}catch (Exception e) {
@@ -448,4 +451,26 @@ public class SQLConnection {
 	        }
 	     }
 	}
+
+    public ArrayList<Stock> getMarket() {
+        String sql = "select * from market";
+        PreparedStatement pst = null;
+        List<Stock> stocks = new ArrayList<Stock>();
+        try {
+            pst = (PreparedStatement) conn.prepareStatement(sql);
+            java.sql.ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                Stock stock = null;
+                String companyName = rs.getString("companyName");
+                String code = rs.getString("code");
+                double price = Double.parseDouble(rs.getString("price"));
+                int share = Integer.parseInt(rs.getString("share"));
+                stock = new Stock(companyName, code, price, share);
+                stocks.add(stock);
+            }
+        }catch (Exception e) {
+            System.out.println("don't get stock");
+        }
+        return (ArrayList<Stock>) stocks;
+    }
 }

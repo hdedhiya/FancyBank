@@ -30,7 +30,7 @@ CREATE TABLE `transaction` (
 
 CREATE TABLE `stock` (
   `stockNum` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(45) NOT NULL,
+  `accountNum` int(11) NOT NULL,
   `companyName` varchar(45) NOT NULL,
   `code` varchar(45) NOT NULL,
   `price` varchar(45) NOT NULL,

@@ -14,7 +14,7 @@ public class ViewMarket {
     public ViewMarket(Bank bb){
         b = bb;
     }
-    public void place(BankCustomer bc){
+    public void place(BankCustomer bc, Savings savingAccount){
         JFrame frame = new JFrame("Stock Market");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(false);
@@ -30,7 +30,9 @@ public class ViewMarket {
         //Collection<Stock> allStocks = new StockMarket().stockMarket;
         SQLConnection sc = new SQLConnection();
         sc.TheSqlConnection();
-        Collection<Stock> market = new ArrayList<>();
+
+
+        Collection<Stock> market = sc.getMarket();
         String cols[] = {"Company Name", "Code", "Price", "Share"};
         DefaultTableModel tabelModel = new DefaultTableModel(cols, 0){
             @Override
@@ -63,7 +65,7 @@ public class ViewMarket {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ViewSecurity vs = new ViewSecurity(b);
-                vs.place(bc);
+                vs.place(bc, savingAccount);
                 frame.dispose();
             }
         });
@@ -78,9 +80,59 @@ public class ViewMarket {
 
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-                //todo
+
                 //buy chosen stock. ask for shares. check for purchasing power
                 //update after buying successfully
+                int selected = table.getSelectedRow();
+                if (selected != -1) {
+                    String amtS = JOptionPane.showInputDialog("Enter number of shares to buy: ");
+                    String companyName = (String) tabelModel.getValueAt(selected, 0); //companyName, code, price, share. share at col 3
+                    String code = (String) tabelModel.getValueAt(selected, 1); // code at columm 1
+                    double price = (double) tabelModel.getValueAt(selected, 2); //companyName, code, price, share. share at col 3
+                    int shares = (int) tabelModel.getValueAt(selected, 3); //companyName, code, price, share. share at col 3
+                    String username = bc.getUsername();
+                    try {
+                        if (amtS != null && !amtS.isEmpty()) {
+                            int amt = Integer.parseInt(amtS);
+                            boolean canBuy = checkEnough(amt, shares);
+                            if(canBuy) {
+                                //connect to db
+                                SQLConnection sc = new SQLConnection();
+                                sc.TheSqlConnection();
+                                StockMarket market = new StockMarket();
+
+                                int newAmt = shares - amt;
+                                sc.updateStockMarket(newAmt, code);
+                                sc.addStock(savingAccount.getIndex(), companyName, code, price, amt);
+                                int newBalance = shares - amt;
+                                double purchase = market.queryPrice(companyName, code, amt);
+                                sc.updateStockMarket(newBalance, code);
+                                sc.updateAccount(savingAccount.getIndex(), savingAccount.getBalance() - purchase);
+                                ViewSecurity vs = new ViewSecurity(b);
+                                vs.place(bc, savingAccount);
+                                frame.dispose();
+
+                                //query price on the choosing stock
+                                //update the shares, or remove that stock if all sold
+                                //update the database
+
+
+
+
+                            } else {
+                                JOptionPane.showMessageDialog(source, "You don't have enough shares to sell");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(source, "Please enter a valid amount of shares");
+                        }
+
+                    } catch (NumberFormatException e1) {
+                        JOptionPane.showMessageDialog(source, "Enter a valid number.");
+
+                    }
+                }else {
+                    JOptionPane.showMessageDialog(source, "Please select a row.");
+                }
             }
         });
 
@@ -113,13 +165,9 @@ public class ViewMarket {
     }
 
 
-    public boolean checkEnough(double amt, double comparison){
-        if ((amt) > comparison){
-            return true;
-        }
-        else {
-            return false;
-        }
+    public boolean checkEnough(double amt, double comparison) {
+        return(amt <= comparison);
+
     }
 
     }

@@ -1,10 +1,8 @@
 package com.company;
 
-import java.awt.*;
-
 public enum AccountType {
     SAVINGACCOUNT("Saving"),
-    CHECHINGACCOUNT("Checking"),
+    CHECKINGACCOUNT("Checking"),
     LOANACCOUNT("Loan");
 
     private final String accountText;
@@ -18,8 +16,8 @@ public enum AccountType {
     }
 
     public static AccountType getTypeByString(String s) {
-        if (s.equals("Savings")) return AccountType.SAVINGACCOUNT;
-        else if (s.equals("Checking")) return AccountType.CHECHINGACCOUNT;
+        if (s.equals("Saving")) return AccountType.SAVINGACCOUNT;
+        else if (s.equals("Checking")) return AccountType.CHECKINGACCOUNT;
         else return AccountType.LOANACCOUNT;
     }
 }

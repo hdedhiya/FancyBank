@@ -56,16 +56,19 @@ public class SecurityAccount {
         return -1;//the stock does not exist
     }
 
-    public void sellAllStock(){
+    public double queryPriceForAll(){
         Iterator<Stock> iterator=stocks.iterator();
+        double res = 0;
         while(iterator.hasNext()){
             Stock s =iterator.next();
-            double money=stockMarket.sellStock(s);
-            if(money!=-1){
-                savings.addBalance(money);
-                stocks.remove(s);
-            }
+            String name = s.getName();
+            String code = s.getCode();
+            int shares = s.getShares();
+            double money=stockMarket.queryPrice(name, code, shares);
+            res += money;
+
         }
+        return res;
     }
 
     public double showPurchasePower(){
