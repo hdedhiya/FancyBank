@@ -5,11 +5,11 @@ public class Savings extends Account {
     private double minAmountforInterest;
     public Savings(double b, Currency c, double fee, double r, double min){
         super(b, c, fee, r);
-        setAccountType("Savings");
+        setAccountType(AccountType.SAVINGACCOUNT);
         minAmountforInterest = min;
     }
     
-    public Savings(String accountType) {
+    public Savings(AccountType accountType) {
     	super(accountType);
     }
 

@@ -12,9 +12,9 @@ public abstract class Account {
     private Integer index;
     private LinkedHashMap<Integer, Transaction> ts;
     private Integer transactionCounter;
-    private String accountType;
+    private AccountType accountType;
 
-    public Account(String accountType) {
+    public Account(AccountType accountType) {
     	this.accountType = accountType;
     }
     
@@ -39,11 +39,11 @@ public abstract class Account {
         this.balance = balance;
     }
 
-    public String getAccountType(){
+    public AccountType getAccountType(){
         return accountType;
     }
 
-    public void setAccountType(String aT){
+    public void setAccountType(AccountType aT){
         accountType = aT;
     }
 

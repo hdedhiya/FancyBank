@@ -4,8 +4,17 @@
     <list default="true" id="5d9d6c1a-0f84-41ea-8c1d-337fbb4a4822" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/SecurityAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/SecurityAccount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/StockMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/StockMarket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FancyBank.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FancyBank.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/db.txt" beforeDir="false" afterPath="$PROJECT_DIR$/doc/db.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Account.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/AccountType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/AccountType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Checking.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Checking.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Loan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Loan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/SQLConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/SQLConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Savings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Savings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Transaction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/ViewAccounts.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/ViewAccounts.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/ViewSecurity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/ViewSecurity.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -14,7 +23,9 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FavoritesManager">
-    <favorites_list name="FancyBank" />
+    <favorites_list name="FancyBank">
+      <favorite_root url="file://$PROJECT_DIR$/jar/mysql-connector-java-5.1.48.jar" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+    </favorites_list>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -32,8 +43,9 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Project" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.language" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">

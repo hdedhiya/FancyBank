@@ -89,7 +89,7 @@ public class SQLConnection {
 	        pst = (PreparedStatement) conn.prepareStatement(sql);
 	        pst.execute();
 	    }catch (Exception e) {
-	        System.out.println("Failed to change cutomer's password!");
+	        System.out.println("Failed to change customer's password!");
 	   	}
 	}
 	
@@ -103,13 +103,14 @@ public class SQLConnection {
 	        java.sql.ResultSet rs = pst.executeQuery();
 	        while (rs.next()) {
 	        	Account account = null;
-	        	String accountType = rs.getString("accountType");
-	        	if(accountType.equals("Checking")) {
-	        		account = new Checking("Checking");
-	        	}else if(accountType.equals("Savings")) {
-	        		account = new Savings("Savings");
-	        	}else if(accountType.equals("Loan")) {
-	        		account = new Loan("Loan");
+	        	String aT = rs.getString("accountType");
+	        	AccountType accountType = AccountType.valueOf(aT);
+	        	if(accountType == AccountType.CHECHINGACCOUNT) {
+	        		account = new Checking(accountType);
+	        	}else if(accountType == AccountType.SAVINGACCOUNT) {
+	        		account = new Savings(accountType);
+	        	}else if(accountType == AccountType.LOANACCOUNT) {
+	        		account = new Loan(accountType);
 	        	}
 	        	int accountNum = rs.getInt("accountNum");
 	        	double balance = Double.parseDouble(rs.getString("balance"));
@@ -124,19 +125,19 @@ public class SQLConnection {
 	}
 	
 	//add customer account
-	public void addAccount(String accountType, String username, String rate, String balance) {
+	public void addAccount(AccountType accountType, String username, String rate, String balance) {
 		String sql = "insert into account (accountType, username, rate, balance) values (?, ?, ?, ?)"; 
 	    PreparedStatement pst = null;
 	    Account account = null;
 	    try {
 	        pst = (PreparedStatement) conn.prepareStatement(sql);
-	        pst.setString(1, accountType);
+	        pst.setString(1, accountType.toString());
 	        pst.setString(2, username);
 	        pst.setString(3, rate);
 	        pst.setString(4, balance);
 	        pst.execute();
 	    }catch (Exception e) {
-	        System.out.println("Failed to add cutomer's account!");
+	        System.out.println("Failed to add customer's account!");
 	   	}
 	}
 	
@@ -149,14 +150,15 @@ public class SQLConnection {
 			pst = (PreparedStatement) conn.prepareStatement(sql);
 			java.sql.ResultSet rs = pst.executeQuery();
 	        while (rs.next()) {
-	        	String accountType = rs.getString("accountType");
-	        	if(accountType.equals("Checking")) {
-	        		account = new Checking("Checking");
-	        	}else if(accountType.equals("Savings")) {
-	        		account = new Savings("Savings");
-	        	}else if(accountType.equals("Loan")) {
-	        		account = new Loan("Loan");
-	        	}
+				String aT = rs.getString("accountType");
+				AccountType accountType = AccountType.valueOf(aT);
+				if(accountType == AccountType.CHECHINGACCOUNT) {
+					account = new Checking(accountType);
+				}else if(accountType == AccountType.SAVINGACCOUNT) {
+					account = new Savings(accountType);
+				}else if(accountType == AccountType.LOANACCOUNT) {
+					account = new Loan(accountType);
+				}
 	        	double balance = Double.parseDouble(rs.getString("balance"));
 	        	account.setIndex(accountNum);
 	        	account.setBalance(balance);
@@ -192,7 +194,7 @@ public class SQLConnection {
 	}
 	
 	//add transaction
-	public void addTransaction(int accountNum, String accountType, String transactionType, String initBalance, String finalBalance, String fee) {
+	public void addTransaction(int accountNum, AccountType accountType, String transactionType, String initBalance, String finalBalance, String fee) {
 		long millis=System.currentTimeMillis();
 		java.sql.Date d=new java.sql.Date(millis);
 		String sql = "insert into transaction (accountNum, accountType, transactionType, initBalance, finalBalance, fee, date) values (?, ?, ?, ?, ?, ?, ?)";
@@ -202,7 +204,7 @@ public class SQLConnection {
 		try {
 	        pst = (PreparedStatement) conn.prepareStatement(sql);
 	        pst.setString(1, Integer.toString(accountNum));
-	        pst.setString(2, accountType);
+	        pst.setString(2, accountType.toString());
 	        pst.setString(3, transactionType);
 	        pst.setString(4, initBalance);
 	        pst.setString(5, finalBalance);
@@ -224,7 +226,8 @@ public class SQLConnection {
 	        java.sql.ResultSet rs = pst.executeQuery();
 	        while (rs.next()) {
 	        	Transaction transaction = null;
-	        	String accountType = rs.getString("accountType");
+	        	String aT = rs.getString("accountType");
+	        	AccountType accountType = AccountType.valueOf(aT);
 	        	int accountNum = rs.getInt("accountNum");
 	        	String transactionType = rs.getString("transactionType");
 	        	double initBalance = rs.getDouble("initBalance");
@@ -259,7 +262,7 @@ public class SQLConnection {
 				double balance = Double.parseDouble(rs.getString("balance"));
 				if (balance > minBalance){
 					updateAccount(rs.getInt("accountNum"), balance + balance*interestRate);
-					addTransaction(rs.getInt("accountNum"), "Savings", "Apply Interest", String.valueOf(balance), String.valueOf(balance + balance*interestRate), String.valueOf(0));
+					addTransaction(rs.getInt("accountNum"), AccountType.SAVINGACCOUNT, "Apply Interest", String.valueOf(balance), String.valueOf(balance + balance*interestRate), String.valueOf(0));
 				}
 			}
 		}catch (Exception e) {
@@ -278,7 +281,7 @@ public class SQLConnection {
 				double balance = Double.parseDouble(rs.getString("balance"));
 				if (balance < 0) {
 					updateAccount(rs.getInt("accountNum"), balance + balance * interestRate);
-					addTransaction(rs.getInt("accountNum"), "Loan", "Apply Interest", String.valueOf(balance), String.valueOf(balance + balance * interestRate), String.valueOf(0));
+					addTransaction(rs.getInt("accountNum"), AccountType.LOANACCOUNT, "Apply Interest", String.valueOf(balance), String.valueOf(balance + balance * interestRate), String.valueOf(0));
 				}
 			}
 		}catch (Exception e) {
@@ -295,7 +298,8 @@ public class SQLConnection {
 			java.sql.ResultSet rs = pst.executeQuery();
 			while (rs.next()) {
 				Transaction transaction = null;
-				String accountType = rs.getString("accountType");
+				String aT = rs.getString("accountType");
+				AccountType accountType = AccountType.valueOf(aT);
 				int accountNum = rs.getInt("accountNum");
 				String transactionType = rs.getString("transactionType");
 				double initBalance = rs.getDouble("initBalance");
@@ -311,8 +315,123 @@ public class SQLConnection {
 		return (ArrayList<Transaction>) transactions;
 	}
 
+	//add stock to my stock list after buying
+	public boolean addStock(String u, String p, String t, double q, int r) {
+		boolean success = true;
+		String sql = "insert into stock (username, companyName, code, price, share) values (?, ?, ?, ?, ?)";
+		PreparedStatement pst = null;
+		try {
+			pst = (PreparedStatement)conn.prepareStatement(sql);
+			pst.setString(1, u);
+			pst.setString(2, p);
+			pst.setString(3, t);
+			pst.setString(4, Double.toString(q));
+			pst.setString(5, Integer.toString(r));
+			pst.execute();
+		}catch(Exception e) {
+			System.out.println("Failed to add " + t + " !");
+			success = false;
+		}
+		return success;
+	}
 
-	
+	//get the chosen stock (to sell)
+	public Stock getStock(int stockNum) {
+		//just for testing
+		String sql = "select * from stock where stockNum = '" + stockNum + "'";
+		PreparedStatement pst = null;
+		Stock stock = null;
+		try {
+			pst = (PreparedStatement) conn.prepareStatement(sql);
+			java.sql.ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				String username = rs.getString("username");
+				String companyName = rs.getString("companyName");
+				String code = rs.getString("code");
+				double price = Double.parseDouble(rs.getString("price"));
+				int share = Integer.parseInt(rs.getString("share"));
+
+				stock = new Stock(companyName, code, price, share);
+			}
+		}catch (Exception e) {
+			System.out.println("don't get any stock");
+		}
+		return stock;
+	}
+
+	//update stock shares after selling
+	public void updateStock(int stockNum, int shares){
+		if(shares == 0) {
+			deleteStock(stockNum);
+			return;
+		}
+		String sql = "update stock set share = '" + shares + "' where stockNum = '" + stockNum + "'";
+
+		PreparedStatement pst = null;
+		try {
+			pst = (PreparedStatement) conn.prepareStatement(sql);
+			pst.execute();
+		}catch (Exception e) {
+			System.out.println("Failed to update shares of stock " + stockNum);
+		}
+	}
+
+	public void deleteStock(int stockNum){
+		String sql = "delete from stock where stockNum = '" + stockNum + "'";
+		PreparedStatement pst = null;
+		try {
+			pst = (PreparedStatement) conn.prepareStatement(sql);
+			pst.execute();
+		}catch (Exception e) {
+			System.out.println("Failed to delete stock " + stockNum);
+		}
+	}
+
+	public void sellAllStock(String username) {
+		String sql = "delete * from stock where username = '" + username + "'";
+		PreparedStatement pst = null;
+		try {
+			pst = (PreparedStatement) conn.prepareStatement(sql);
+			pst.execute();
+		} catch (Exception e) {
+			System.out.println("Failed to delete all Stock for " + username);
+		}
+	}
+
+	public void updateStockMarket(int shares, String code) {
+		String sql = "update market set share = '" + shares + "' where code = '" + code + "'";
+		PreparedStatement pst = null;
+		try {
+			pst = (PreparedStatement) conn.prepareStatement(sql);
+			pst.execute();
+		} catch (Exception e) {
+			System.out.println("Failed to update Stock market");
+		}
+	}
+
+	//get customers accounts
+	public ArrayList<Stock> getStocks(String u){
+		String sql = "select * from stock where username = '" + u + "'";
+		PreparedStatement pst = null;
+		List<Stock> stocks = new ArrayList<Stock>();
+		try {
+			pst = (PreparedStatement) conn.prepareStatement(sql);
+			java.sql.ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				Stock stock = null;
+				String companyName = rs.getString("companyName");
+				String code = rs.getString("code");
+				double price = Double.parseDouble(rs.getString("price"));
+				int share = Integer.parseInt(rs.getString("share"));
+				stock = new Stock(companyName, code, price, share);
+				stocks.add(stock);
+			}
+		}catch (Exception e) {
+			System.out.println("don't get stock");
+		}
+		return (ArrayList<Stock>) stocks;
+	}
+
 	public void insert(){
 	    
 	}

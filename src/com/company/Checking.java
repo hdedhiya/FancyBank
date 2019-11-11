@@ -4,10 +4,10 @@ package com.company;
 public class Checking extends Account {
     public Checking(double b, Currency c, double fee, double r){
         super(b,c, fee, r);
-        setAccountType("Checking");
+        setAccountType(AccountType.CHECHINGACCOUNT);
     }
     
-    public Checking(String accountType) {
+    public Checking(AccountType accountType) {
     	super(accountType);
     }
 

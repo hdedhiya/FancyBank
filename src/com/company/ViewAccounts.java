@@ -88,7 +88,7 @@ public class ViewAccounts{
 
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-                String[] options = {"Savings", "Checking", "Loan"};
+                String[] options = {"Saving", "Checking", "Loan"};
                 String str = (String)JOptionPane.showInputDialog(source, "What kind of account?", "Account Type", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 String amt = JOptionPane.showInputDialog("Enter initial amount: ");
                 Currency c = (Currency)JOptionPane.showInputDialog(source, "Which currency", "Currency Selection", JOptionPane.QUESTION_MESSAGE, null, b.getAllCurrencies(), b.getAllCurrencies()[0]);
@@ -100,14 +100,14 @@ public class ViewAccounts{
                         	SQLConnection sc = new SQLConnection();
                     		sc.TheSqlConnection();
                             boolean check = checkEnough(amt1, b.getOpenAccountFee(), c);
-                            if (str == "Savings") {
+                            if (str == "Saving") {
                                 if (check) {
                                     Savings newAcc = new Savings(amt1, c, b.getOpenAccountFee(), b.getSavingsInterestRate(), b.getSavingsMinAmount());
-                                    sc.addAccount("Savings", bc.getUsername(), Double.toString(newAcc.getRate()), Double.toString(newAcc.getBalance()));
+                                    sc.addAccount(AccountType.SAVINGACCOUNT, bc.getUsername(), Double.toString(newAcc.getRate()), Double.toString(newAcc.getBalance()));
                                     Account newAccount = sc.getAccounts(bc.getUsername()).get(sc.getAccounts(bc.getUsername()).size() - 1);
                                     int accountNum = newAccount.getIndex();
                                     String balance = Double.toString(newAccount.getBalance());
-                                    sc.addTransaction(accountNum, "Savings", "Created Account", "0", balance, Double.toString(b.getOpenAccountFee()));
+                                    sc.addTransaction(accountNum, AccountType.SAVINGACCOUNT, "Created Account", "0", balance, Double.toString(b.getOpenAccountFee()));
 //                                    newAcc.addTransaction(new Transaction("Savings", newAcc.getIndex(), "Created Account", 0, newAcc.getBalance(), b.getOpenAccountFee()));
 //                                    b.recentTransactions.put(b.getTransactionCounter(), new Transaction("Savings", newAcc.getIndex(), "Created Account", 0, newAcc.getBalance(), b.getOpenAccountFee()));
 //                                    b.setTransactionCounter(b.getTransactionCounter() + 1);
@@ -115,16 +115,16 @@ public class ViewAccounts{
                                     place(bc);
                                     frame.dispose();
                                 } else {
-                                    JOptionPane.showMessageDialog(source, "Not enough initial funds for a savings account. The open fee is " + b.getOpenAccountFee());
+                                    JOptionPane.showMessageDialog(source, "Not enough initial funds for a saving account. The open fee is " + b.getOpenAccountFee());
                                 }
                             } else if (str == "Checking") {
                                 if (check) {
                                     Checking newAcc = new Checking(amt1, c, b.getOpenAccountFee(), 0);
-                                    sc.addAccount("Checking", bc.getUsername(), Double.toString(newAcc.getRate()), Double.toString(newAcc.getBalance()));
+                                    sc.addAccount(AccountType.CHECHINGACCOUNT, bc.getUsername(), Double.toString(newAcc.getRate()), Double.toString(newAcc.getBalance()));
                                     Account newAccount = sc.getAccounts(bc.getUsername()).get(sc.getAccounts(bc.getUsername()).size() - 1);
                                     int accountNum = newAccount.getIndex();
                                     String balance = Double.toString(newAccount.getBalance());
-                                    sc.addTransaction(accountNum, "Checking", "Created Account", "0", balance, Double.toString(b.getOpenAccountFee()));
+                                    sc.addTransaction(accountNum, AccountType.CHECHINGACCOUNT, "Created Account", "0", balance, Double.toString(b.getOpenAccountFee()));
 //                                    newAcc.addTransaction(new Transaction("Checking", newAcc.getIndex(), "Created Account", 0, newAcc.getBalance(), b.getOpenAccountFee()));
 //                                    bc.addAccount(newAcc.getIndex(), newAcc);
 //                                    b.recentTransactions.put(b.getTransactionCounter(), new Transaction("Checking", newAcc.getIndex(), "Created Account", 0, newAcc.getBalance(), b.getOpenAccountFee()));
@@ -147,11 +147,11 @@ public class ViewAccounts{
 //                                    }
                                     if ((amt1 * c.getConversionToBaseRate()) <= (total * b.getMaxLoanPercent())) {
                                         Loan newAcc = new Loan(-amt1, c, b.getOpenAccountFee(), b.getLoanInterestRate());
-                                        sc.addAccount("Loan", bc.getUsername(), Double.toString(newAcc.getRate()), Double.toString(newAcc.getBalance()));
+                                        sc.addAccount(AccountType.LOANACCOUNT, bc.getUsername(), Double.toString(newAcc.getRate()), Double.toString(newAcc.getBalance()));
                                         Account newAccount = sc.getAccounts(bc.getUsername()).get(sc.getAccounts(bc.getUsername()).size() - 1);
                                         int accountNum = newAccount.getIndex();
                                         String balance = Double.toString(newAccount.getBalance());
-                                        sc.addTransaction(accountNum, "Loan", "Created Account", "0", balance, Double.toString(b.getOpenAccountFee()));
+                                        sc.addTransaction(accountNum, AccountType.LOANACCOUNT, "Created Account", "0", balance, Double.toString(b.getOpenAccountFee()));
 //                                        newAcc.addTransaction(new Transaction("Loan", newAcc.getIndex(), "Created Account", 0, newAcc.getBalance(), b.getOpenAccountFee()));
 //                                        bc.addAccount(newAcc.getIndex(), newAcc);
 //                                        b.recentTransactions.put(b.getTransactionCounter(), new Transaction("Loan", newAcc.getIndex(), "Created Account", 0, newAcc.getBalance(), b.getOpenAccountFee()));
@@ -251,7 +251,7 @@ public class ViewAccounts{
                                         	double finalAmt = (amt * c.getConversionToBaseRate()) - b.getCheckingAccountTransactionFee();
                                         	double finalB = initB + finalAmt;
                                         	sc.updateAccount(account_index, finalB);
-                                            sc.addTransaction(account_index, "Checking", "Deposit", Double.toString(initB), Double.toString(finalB), Double.toString(b.getCheckingAccountTransactionFee()));
+                                            sc.addTransaction(account_index, AccountType.CHECHINGACCOUNT, "Deposit", Double.toString(initB), Double.toString(finalB), Double.toString(b.getCheckingAccountTransactionFee()));
 //                                            double initB = bc.getAccount(account_index).getBalance();
 //                                            bc.getAccount(account_index).addBalance((amt * c.getConversionToBaseRate()) - b.getCheckingAccountTransactionFee());
 //                                            bc.getAccount(account_index).addTransaction(new Transaction("Checking", bc.getAccount(account_index).getIndex(), "Deposit", initB, bc.getAccount(account_index).getBalance(), b.getCheckingAccountTransactionFee()));
@@ -267,14 +267,14 @@ public class ViewAccounts{
                                         if (account.getAccountType().equals("Savings")) {
                                         	sc.updateAccount(account_index, finalB);
                                         	sc.updateAccount(account_index, finalB);
-                                            sc.addTransaction(account_index, "Savings", "Deposit", Double.toString(initB), Double.toString(finalB), "0");
+                                            sc.addTransaction(account_index, AccountType.SAVINGACCOUNT, "Deposit", Double.toString(initB), Double.toString(finalB), "0");
 //                                            bc.getAccount(account_index).addTransaction(new Transaction("Savings", bc.getAccount(account_index).getIndex(), "Deposit", initB, bc.getAccount(account_index).getBalance(), 0));
 //                                            b.recentTransactions.put(b.getTransactionCounter(), new Transaction("Savings", bc.getAccount(account_index).getIndex(), "Deposit", initB, bc.getAccount(account_index).getBalance(), 0));
 //                                            b.setTransactionCounter(b.getTransactionCounter() + 1);
                                         }
                                         else{
                                         	sc.updateAccount(account_index, finalB);
-                                            sc.addTransaction(account_index, "Loan", "Deposit", Double.toString(initB), Double.toString(finalB), "0");
+                                            sc.addTransaction(account_index, AccountType.LOANACCOUNT, "Deposit", Double.toString(initB), Double.toString(finalB), "0");
 //                                            bc.getAccount(account_index).addTransaction(new Transaction("Loan", bc.getAccount(account_index).getIndex(), "Deposit", initB, bc.getAccount(account_index).getBalance(), 0));
 //                                            b.recentTransactions.put(b.getTransactionCounter(), new Transaction("Loan", bc.getAccount(account_index).getIndex(), "Deposit", initB, bc.getAccount(account_index).getBalance(), 0));
 //                                            b.setTransactionCounter(b.getTransactionCounter() + 1);
@@ -333,7 +333,7 @@ public class ViewAccounts{
                                             	double finalAmt = amt * c.getConversionToBaseRate() + b.getWithdrawalFee() + b.getCheckingAccountTransactionFee();
                                             	double finalB = initB - finalAmt;
                                             	sc.updateAccount(account_index, finalB);
-                                            	sc.addTransaction(account_index, "Checking", "Withdraw", Double.toString(initB), Double.toString(finalB), Double.toString(b.getWithdrawalFee() + b.getCheckingAccountTransactionFee()));
+                                            	sc.addTransaction(account_index, AccountType.CHECHINGACCOUNT, "Withdraw", Double.toString(initB), Double.toString(finalB), Double.toString(b.getWithdrawalFee() + b.getCheckingAccountTransactionFee()));
 //                                                double initB = bc.getAccount(account_index).getBalance();
 //                                                bc.getAccount(account_index).removeBalance((amt * c.getConversionToBaseRate()) + b.getWithdrawalFee() + b.getCheckingAccountTransactionFee());
 //                                                bc.getAccount(account_index).addTransaction(new Transaction("Checking", bc.getAccount(account_index).getIndex(), "Withdraw", initB, bc.getAccount(account_index).getBalance(), b.getWithdrawalFee()+b.getCheckingAccountTransactionFee()));
@@ -347,7 +347,7 @@ public class ViewAccounts{
                                         	double finalAmt = (amt * c.getConversionToBaseRate()) + b.getWithdrawalFee();
                                         	double finalB = initB - finalAmt;
                                         	sc.updateAccount(account_index, finalB);
-                                        	sc.addTransaction(account_index, "Savings", "Withdraw", Double.toString(initB), Double.toString(finalB), Double.toString(b.getWithdrawalFee()));
+                                        	sc.addTransaction(account_index, AccountType.SAVINGACCOUNT, "Withdraw", Double.toString(initB), Double.toString(finalB), Double.toString(b.getWithdrawalFee()));
 //                                            double initB = bc.getAccount(account_index).getBalance();
 //                                            bc.getAccount(account_index).removeBalance((amt * c.getConversionToBaseRate()) + b.getWithdrawalFee());
 //                                            bc.getAccount(account_index).addTransaction(new Transaction("Savings", bc.getAccount(account_index).getIndex(), "Withdraw", initB, bc.getAccount(account_index).getBalance(), b.getWithdrawalFee()));

@@ -4,7 +4,7 @@ import java.sql.Date;
 
 //Transaction class that is used in account and bank to keep track of changes.
 public class Transaction {
-    private String accountType;
+    private AccountType accountType;
     private int accountNumber;
     private String transactionType;
     private double initBalance;
@@ -12,7 +12,7 @@ public class Transaction {
     private double fee;
     private Date date;
 
-    public Transaction(String aT, int aN, String tT, double iB, double fB, double f, Date d){
+    public Transaction(AccountType aT, int aN, String tT, double iB, double fB, double f, Date d){
         accountType = aT;
         accountNumber = aN;
         transactionType = tT;
@@ -22,7 +22,7 @@ public class Transaction {
         date = d;
     }
 
-    public String getAccountType(){
+    public AccountType getAccountType(){
         return accountType;
     }
 

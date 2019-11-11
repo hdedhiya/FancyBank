@@ -4,10 +4,10 @@ package com.company;
 public class Loan extends Account {
     public Loan(double b, Currency c, double fee, double r){
         super(b,c, fee,r);
-        setAccountType("Loan");
+        setAccountType(AccountType.LOANACCOUNT);
     }
     
-    public Loan(String accountType) {
+    public Loan(AccountType accountType) {
     	super(accountType);
     }
     

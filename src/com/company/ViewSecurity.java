@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -27,8 +28,11 @@ public class ViewSecurity {
 
         //all of myStock list
         //get this from database
-        //todo
-        Collection<Stock> myStocks = new ArrayList<>();
+
+        SQLConnection sc = new SQLConnection();
+        sc.TheSqlConnection();
+        ArrayList<Stock> allStocks = sc.getStocks(bc.getUsername());
+
         String cols[] = {"Company Name", "Code", "Price", "Share"};
         DefaultTableModel tabelModel = new DefaultTableModel(cols, 0){
             @Override
@@ -37,7 +41,7 @@ public class ViewSecurity {
             }
         };
 
-        for(Stock s: myStocks){
+        for(Stock s: allStocks){
             Object[] obj = {s.getName(), s.getCode(), s.getPrice(), s.getShares()};
             tabelModel.addRow(obj);
         }
@@ -92,13 +96,20 @@ public class ViewSecurity {
                 int selected = table.getSelectedRow();
                 if (selected != -1) {
                     String amtS = JOptionPane.showInputDialog("Enter number of shares to sell: ");
-                    int shares = (int) tabelModel.getValueAt(selected, 3); //name, code, price, share. share at col 3
+                    int shares = (int) tabelModel.getValueAt(selected, 4); //stockNum, name, code, price, share. share at col 3
+                    int stockNum = (int) tabelModel.getValueAt(selected, 0); //stockNum at 0
                     try {
                         if (amtS != null && !amtS.isEmpty()) {
                             int amt = Integer.parseInt(amtS);
                             boolean canSell = checkEnough(amt, shares);
                             if(canSell) {
+                                //connect to db
+                                SQLConnection sc = new SQLConnection();
+                                sc.TheSqlConnection();
                                 int newAmt = shares - amt;
+                                sc.updateStock(stockNum, newAmt);
+
+
                                 //query price on the choosing stock
                                 //update the shares, or remove that stock if all sold
                                 //update the database
@@ -155,6 +166,10 @@ public class ViewSecurity {
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
                 bc.sellAllStocks();
+                String username = bc.getUsername();
+                SQLConnection sc = new SQLConnection();
+                sc.TheSqlConnection();
+                sc.sellAllStock(username);
                 JOptionPane.showMessageDialog(source, "All Stocks sold successfully");
                 place(bc);
                 frame.dispose();
@@ -171,6 +186,10 @@ public class ViewSecurity {
                 JButton source = (JButton) e.getSource();
                 bc.viewStockProfit();
                 JOptionPane.showMessageDialog(source, "Stock profit shown");
+
+                //todo
+                //show profit in massagedialog or label
+
             }
         });
 
