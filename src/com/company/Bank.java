@@ -50,10 +50,7 @@ public class Bank extends Login{
         String u = person.getUsername();
         String p = person.getPassword();
         String t = person.getType();
-        SQLConnection sc = new SQLConnection();
-		sc.TheSqlConnection();
-		boolean success = sc.addUser(u, p, t);
-		sc.close();
+		boolean success = Person.addUser(u, p, t);
 		return success;
 //        if (get(new PairCopy(u, p)) == null) {
 //            put(new PairCopy(u, p), new BankCustomer(u, p));
@@ -344,10 +341,11 @@ public class Bank extends Login{
                 JButton source = (JButton) e.getSource();
                 String str = JOptionPane.showInputDialog(source, "Enter New Password");
                 if (str != null && !str.isEmpty()) {
-                	SQLConnection sc = new SQLConnection();
-            		sc.TheSqlConnection();
-                	sc.changeCustomerPW(p.getUsername(), str);
-                    JOptionPane.showMessageDialog(source, "Password changed!");
+                	if (Person.changeCustomerPW(p.getUsername(), str))
+                        JOptionPane.showMessageDialog(source, "Password changed!");
+                	else{
+                        JOptionPane.showMessageDialog(source, "Failed to change password!");
+                    }
                 }
                 else {
                     JOptionPane.showMessageDialog(source, "You didn't enter a password!");

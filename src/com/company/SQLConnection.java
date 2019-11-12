@@ -12,8 +12,29 @@ public class SQLConnection {
 	private static final String URL="jdbc:mysql://localhost:3306/fancybank?useUnicode=true&characterEncoding=utf8";
 	
 	private static final String NAME="root";//username
-	private static final String PASSWORD="xjz950724";//password
+	private static final String PASSWORD="hd3d1337";//password
 	public java.sql.Connection conn = null;
+
+	public SQLConnection(){
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println("Failed to load the driver");
+			e.printStackTrace();
+		}try {
+			conn = DriverManager.getConnection(URL, NAME, PASSWORD);
+			System.out.println("Successfully connected!");
+
+		}catch (SQLException e){
+			System.out.println("Failed to connect to mysql!");
+			//check your username and password
+			e.printStackTrace();
+		}
+	}
+
+	public java.sql.Connection getConn(){
+		return conn;
+	}
 	
 	public void TheSqlConnection(){
 	    //1.load the driver
@@ -24,8 +45,8 @@ public class SQLConnection {
 	        e.printStackTrace();
 	    }try {
 	        conn = DriverManager.getConnection(URL, NAME, PASSWORD);
-	        System.out.println("Successfully connected!");    
-	
+	        System.out.println("Successfully connected!");
+
 	    }catch (SQLException e){
 	        System.out.println("Failed to connect to mysql!");
 	        //check your username and password
@@ -34,64 +55,40 @@ public class SQLConnection {
 	}
 	
 	//user login
-	public Person getUser(String u, String p) {
-		//just for testing
-		String sql = "select * from user where username = '" + u + "' and password = '" + p + "'"; 
-		PreparedStatement pst = null;
-		Person user = null;
-		try {
-		    pst = (PreparedStatement) conn.prepareStatement(sql);
-		    java.sql.ResultSet rs = pst.executeQuery();
-		    while (rs.next()) {
-		    	String username = rs.getString("username");
-		    	String password = rs.getString("password");
-		        String type = rs.getString("type");
-		        if(type.equals("customer")) {
-		        	user = new BankCustomer(username, password);
-		        }else if(type.equals("banker")) {
-		        	user = new Banker(username, password);
-		        }
-		        user.setType(type);
-		       }
-		}catch (Exception e) {
-		    System.out.println("don't get any");
-		}
-		return user;
-	}
+//	public Person getUser(String u, String p) {
+//		//just for testing
+//		String sql = "select * from user where username = '" + u + "' and password = '" + p + "'";
+//		PreparedStatement pst = null;
+//		Person user = null;
+//		try {
+//		    pst = (PreparedStatement) conn.prepareStatement(sql);
+//		    java.sql.ResultSet rs = pst.executeQuery();
+//		    while (rs.next()) {
+//		    	String username = rs.getString("username");
+//		    	String password = rs.getString("password");
+//		        String type = rs.getString("type");
+//		        if(type.equals("customer")) {
+//		        	user = new BankCustomer(username, password);
+//		        }else if(type.equals("banker")) {
+//		        	user = new Banker(username, password);
+//		        }
+//		        user.setType(type);
+//		       }
+//		}catch (Exception e) {
+//		    System.out.println("don't get any");
+//		}
+//		return user;
+//	}
 	
 	//user register
-	public boolean addUser(String u, String p, String t) {
-		boolean success = true;
-		String sql = "insert into user (username, password, type) values (?, ?, ?)";
-		PreparedStatement pst = null;
-		try {
-			pst = (PreparedStatement)conn.prepareStatement(sql);
-			pst.setString(1, u);
-	        pst.setString(2, p);
-	        pst.setString(3, t);
-			pst.execute();
-		}catch(Exception e) {
-			System.out.println("Failed to add " + t + " !");
-			success = false;
-		}
-		return success;
-	}
+
 	
 	/**
 	 * Customer operations
 	 * */
 		
 	//change customer password
-	public void changeCustomerPW(String u, String p) {
-		String sql = "update customer set password = '" + p + "' where username = '" + u + "'"; 
-	    PreparedStatement pst = null;
-	    try {
-	        pst = (PreparedStatement) conn.prepareStatement(sql);
-	        pst.execute();
-	    }catch (Exception e) {
-	        System.out.println("Failed to change customer's password!");
-	   	}
-	}
+
 	
 	//get customers accounts
 	public ArrayList<Account> getAccounts(String u){

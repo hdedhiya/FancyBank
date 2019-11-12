@@ -21,13 +21,13 @@ public abstract class Login {
         usernames = new HashSet();
     }
 
-    public Person getUser(String u, String p){
-    	SQLConnection sc = new SQLConnection();
-		sc.TheSqlConnection();
-		Person user = sc.getUser(u, p);
-		sc.close();
-        return user;
-    }
+//    public Person getUser(String u, String p){
+//    	SQLConnection sc = new SQLConnection();
+//		sc.TheSqlConnection();
+//		Person user = sc.getUser(u, p);
+//		sc.close();
+//        return user;
+//    }
 
     public void placeComponents() {
         JFrame frame = new JFrame("FancyBank");
@@ -86,7 +86,7 @@ public abstract class Login {
                     JOptionPane.showMessageDialog(source, "Username or password has not been entered!");
                 }
                 else{
-                    Person user = getUser(t, p);
+                    Person user = Person.getUser(t, p);
                     if (user != null){
                         if (user.getType().equals("banker")){
                             ownerView((Owner) user);
