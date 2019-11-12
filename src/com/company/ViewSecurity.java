@@ -95,7 +95,6 @@ public class ViewSecurity {
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
                 int selected = table.getSelectedRow();
-                double initB = savingAccount.getBalance();
                 if (selected != -1) {
                     String amtS = JOptionPane.showInputDialog("Enter number of shares to sell: ");
                     int index = (int) tabelModel.getValueAt(selected, 0);
@@ -115,14 +114,9 @@ public class ViewSecurity {
                                 SecurityAccount.updateStock(index, newAmt);
                                 double sellPrice = securityAccount.queryPrice(name, code, amt);
 
-                                System.out.println(savingAccount.getBalance());
-
                                 BankCustomer.updateAccount(savingAccount.getIndex(), savingAccount.getBalance() + sellPrice);
-
-                                Account.addTransaction(savingAccount.getIndex(), savingAccount.getAccountType(), "Sold " + code, String.valueOf(initB), String.valueOf(initB+sellPrice), "0");
                                 ViewSecurity vs = new ViewSecurity(b);
-                                vs.place(bc, (Savings)BankCustomer.getAccount(savingAccount.getIndex()));
-
+                                vs.place(bc, savingAccount);
                                 frame.dispose();
 
                                 JOptionPane.showMessageDialog(source, "Your stock is successfully sold");
@@ -155,7 +149,6 @@ public class ViewSecurity {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-                double initB = savingAccount.getBalance();
 
                 double profit = securityAccount.queryPriceForAll();
                 for(Stock stock : allStocks) {
@@ -163,9 +156,8 @@ public class ViewSecurity {
                 }
                 SecurityAccount.sellAllStock(savingAccount.getIndex());
                 BankCustomer.updateAccount(savingAccount.getIndex(), savingAccount.getBalance() + profit);
-                Account.addTransaction(savingAccount.getIndex(), savingAccount.getAccountType(), "Sold all stock", String.valueOf(initB), String.valueOf(initB+profit), "0");
                 JOptionPane.showMessageDialog(source, "All Stocks sold successfully");
-                place(bc, (Savings)BankCustomer.getAccount(savingAccount.getIndex()));
+                place(bc, savingAccount);
                 frame.dispose();
             }
         });
@@ -185,6 +177,8 @@ public class ViewSecurity {
                 }
                 JOptionPane.showMessageDialog(source, "Your profit is " + (profit-allPrice));
 
+
+                //todo
 
 
             }

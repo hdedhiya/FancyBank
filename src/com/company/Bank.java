@@ -1,7 +1,6 @@
 package com.company;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -238,9 +237,9 @@ public class Bank extends Login{
                     double newPrice = stock.getPrice() * percentage;
                     StockMarket.updateMarketPrice(newPrice, stock.getCode());
                 }
+
                 String[] fees = {"The stock market price has been updated "};
                 JOptionPane.showMessageDialog(source, fees);
-
 
             }
         });

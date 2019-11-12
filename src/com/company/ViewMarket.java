@@ -28,8 +28,11 @@ public class ViewMarket {
 
         // pull down the stockmarket from database
         //Collection<Stock> allStocks = new StockMarket().stockMarket;
+        SQLConnection sc = new SQLConnection();
+        sc.TheSqlConnection();
 
-        Collection<Stock> market = StockMarket.getMarket();
+
+        Collection<Stock> market = sc.getMarket();
         String cols[] = {"Company Name", "Code", "Price", "Share"};
         DefaultTableModel tabelModel = new DefaultTableModel(cols, 0){
             @Override
@@ -77,7 +80,7 @@ public class ViewMarket {
 
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-                double initB = savingAccount.getBalance();
+
                 //buy chosen stock. ask for shares. check for purchasing power
                 //update after buying successfully
                 int selected = table.getSelectedRow();
@@ -92,33 +95,30 @@ public class ViewMarket {
                         if (amtS != null && !amtS.isEmpty()) {
                             int amt = Integer.parseInt(amtS);
                             boolean canBuy = checkEnough(amt, shares);
-                            if(canBuy) {
-                                //connect to db
-                                StockMarket market = new StockMarket();
+                            SQLConnection sc = new SQLConnection();
+                            sc.TheSqlConnection();
+                            double balance = sc.getAccount(savingAccount.getIndex()).getBalance();
 
+                            double paidPrice = price * amt;
+                            int minimum = 100; //minimum amount on saving account to buy stock
+                            double purchasingPower = balance - minimum;
+                            //boolean powerEnoughToBuy = checkPowerEnough();
+                            if(canBuy && purchasingPower >= paidPrice) {
                                 int newAmt = shares - amt;
-                                StockMarket.updateStockMarket(newAmt, code);
-                                SecurityAccount.addStock(savingAccount.getIndex(), companyName, code, price, amt);
-                                int newBalance = shares - amt;
-                                double purchase = market.queryPrice(companyName, code, amt);
+                                sc.updateStockMarket(newAmt, code);
+                                sc.addStock(savingAccount.getIndex(), companyName, code, price, amt);
+                                System.out.println("my current balance is " + savingAccount.getBalance());
+                                System.out.println("need to pay " + paidPrice);
+                                double newBalance = balance - paidPrice;
+                                sc.updateAccount(savingAccount.getIndex(), newBalance);
+                                sc.close();
 
-                                System.out.println(initB);
-                                StockMarket.updateStockMarket(newBalance, code);
-                                BankCustomer.updateAccount(savingAccount.getIndex(), savingAccount.getBalance() - purchase);
-                                Account.addTransaction(savingAccount.getIndex(), savingAccount.getAccountType(), "Bought " + code, String.valueOf(initB), String.valueOf(initB-purchase), "0");
                                 ViewSecurity vs = new ViewSecurity(b);
-                                vs.place(bc, (Savings)BankCustomer.getAccount(savingAccount.getIndex()));
+                                vs.place(bc, savingAccount);
                                 frame.dispose();
 
-                                //query price on the choosing stock
-                                //update the shares, or remove that stock if all sold
-                                //update the database
-
-
-
-
                             } else {
-                                JOptionPane.showMessageDialog(source, "You don't have enough shares to sell");
+                                JOptionPane.showMessageDialog(source, "You don't have enough purchasing power to buy");
                             }
                         } else {
                             JOptionPane.showMessageDialog(source, "Please enter a valid amount of shares");
@@ -134,7 +134,26 @@ public class ViewMarket {
             }
         });
 
+        JButton purchasingPowerButton = new JButton("Purchasing Power");
+        purchasingPowerButton.setBounds(10, 180, 140, 25);
+        panel.add(purchasingPowerButton);
 
+        purchasingPowerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton source = (JButton) e.getSource();
+                SQLConnection sc = new SQLConnection();
+                sc.TheSqlConnection();
+                double balance = sc.getAccount(savingAccount.getIndex()).getBalance();
+                sc.close();
+                int minimum = 100; //minimum amount on saving account to buy stock
+                double purchasingPower = balance - minimum;
+                JOptionPane.showMessageDialog(source, "Your remaining purchasing power is " + purchasingPower);
+
+
+
+            }
+        });
 
         frame.getContentPane().add(splitPane);
         frame.setVisible(true);
