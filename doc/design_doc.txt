@@ -1,6 +1,6 @@
 CS591 FancierBank design doc
 
-Team 19
+Team 18
 Jingzhou Xue    U10828768   jxue@bu.edu
 Kaijia You
 Peiqing Lu
