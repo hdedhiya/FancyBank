@@ -14,6 +14,10 @@ For our original design, everyone has some advantages. We decided use Harsh's co
 For our new Fancier bank which has a stock trade feature, we created Stock, StockMarket, SecurityAccount classes and their GUI respectively. The SecurityAccount is not an Account. It stays under the savingAccount which is going to pay for the stock purchase.
 For our database part, we created it as one huge class and put all methods in it. Now we have also broken it and put all methods into their belonging classes. Thus, the code is cleaner.
 
+Evaluation 
+Our current design is way better than it is at the starting point. We make the database and GUI classes all as object oriented as possible, so they could possibly be reused.
+Thanks to the well-discussed first meeting, we have the design in head. But adding the sql truly gives us some pain since we need to get the data from the database not the object any more. Everything worked out lastly.
+
 •Bank Part•
 Account.java
 File that implements basic bookkeeping for accounts, like keeping balance, rate, index, and a collection of transactions associated with the account.
