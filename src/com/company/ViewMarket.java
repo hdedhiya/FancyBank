@@ -10,7 +10,7 @@ import java.util.Collection;
 
 public class ViewMarket {
 
-    Bank b;
+    private Bank b;
     public ViewMarket(Bank bb){
         b = bb;
     }
@@ -27,7 +27,6 @@ public class ViewMarket {
 
 
         // pull down the stockmarket from database
-        //Collection<Stock> allStocks = new StockMarket().stockMarket;
 
         Collection<Stock> market = StockMarket.getMarket();
         String cols[] = {"Company Name", "Code", "Price", "Share"};
@@ -68,15 +67,16 @@ public class ViewMarket {
         });
 
         //select a stock and buy. ask for how many shares and check if purchasing power is enough
-        JButton addAccount = new JButton("Buy Stock");
-        addAccount.setBounds(10, 40, 140, 25);
-        panel.add(addAccount);
+        JButton buyStock = new JButton("Buy Stock");
+        buyStock.setBounds(10, 40, 140, 25);
+        panel.add(buyStock);
 
-        addAccount.addActionListener(new ActionListener() {
+        buyStock.addActionListener(new ActionListener() {
             @Override
 
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
+                double initB = savingAccount.getBalance();
 
                 //buy chosen stock. ask for shares. check for purchasing power
                 //update after buying successfully
@@ -107,9 +107,10 @@ public class ViewMarket {
                                 System.out.println("need to pay " + paidPrice);
                                 double newBalance = balance - paidPrice;
                                 BankCustomer.updateAccount(savingAccount.getIndex(), newBalance);
+                                Account.addTransaction(savingAccount.getIndex(), savingAccount.getAccountType(), "Bought " + code, String.valueOf(initB), String.valueOf(newBalance), "0");
 
                                 ViewSecurity vs = new ViewSecurity(b);
-                                vs.place(bc, savingAccount);
+                                vs.place(bc, (Savings)BankCustomer.getAccount(savingAccount.getIndex()));
                                 frame.dispose();
 
                             } else {

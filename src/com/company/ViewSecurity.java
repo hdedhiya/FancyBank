@@ -95,6 +95,7 @@ public class ViewSecurity {
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
                 int selected = table.getSelectedRow();
+                double initB = savingAccount.getBalance();
                 if (selected != -1) {
                     String amtS = JOptionPane.showInputDialog("Enter number of shares to sell: ");
                     int index = (int) tabelModel.getValueAt(selected, 0);
@@ -115,8 +116,9 @@ public class ViewSecurity {
                                 double sellPrice = securityAccount.queryPrice(name, code, amt);
 
                                 BankCustomer.updateAccount(savingAccount.getIndex(), savingAccount.getBalance() + sellPrice);
+                                Account.addTransaction(savingAccount.getIndex(), savingAccount.getAccountType(), "Sold " + code, String.valueOf(initB), String.valueOf(initB+sellPrice), "0");
                                 ViewSecurity vs = new ViewSecurity(b);
-                                vs.place(bc, savingAccount);
+                                vs.place(bc, (Savings)BankCustomer.getAccount(savingAccount.getIndex()));
                                 frame.dispose();
 
                                 JOptionPane.showMessageDialog(source, "Your stock is successfully sold");
@@ -141,13 +143,14 @@ public class ViewSecurity {
             }
         });
 
-        JButton addButton = new JButton("Sell All");
-        addButton.setBounds(10, 100, 140, 25);
-        panel.add(addButton);
+        JButton sellAll = new JButton("Sell All");
+        sellAll.setBounds(10, 100, 140, 25);
+        panel.add(sellAll);
 
-        addButton.addActionListener(new ActionListener() {
+        sellAll.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                double initB = savingAccount.getBalance();
                 JButton source = (JButton) e.getSource();
 
                 double profit = securityAccount.queryPriceForAll();
@@ -156,17 +159,18 @@ public class ViewSecurity {
                 }
                 SecurityAccount.sellAllStock(savingAccount.getIndex());
                 BankCustomer.updateAccount(savingAccount.getIndex(), savingAccount.getBalance() + profit);
+                Account.addTransaction(savingAccount.getIndex(), savingAccount.getAccountType(), "Sold all stock", String.valueOf(initB), String.valueOf(initB+profit), "0");
                 JOptionPane.showMessageDialog(source, "All Stocks sold successfully");
-                place(bc, savingAccount);
+                place(bc, (Savings)BankCustomer.getAccount(savingAccount.getIndex()));
                 frame.dispose();
             }
         });
 
-        JButton withdrawButton = new JButton("View Profit");
-        withdrawButton.setBounds(10, 130, 140, 25);
-        panel.add(withdrawButton);
+        JButton viewProfit = new JButton("View Profit");
+        viewProfit.setBounds(10, 130, 140, 25);
+        panel.add(viewProfit);
 
-        withdrawButton.addActionListener(new ActionListener() {
+        viewProfit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
@@ -178,15 +182,8 @@ public class ViewSecurity {
                 JOptionPane.showMessageDialog(source, "Your profit is " + (profit-allPrice));
 
 
-                //todo
-
-
             }
         });
-
-
-
-
 
         frame.getContentPane().add(splitPane);
         frame.setVisible(true);

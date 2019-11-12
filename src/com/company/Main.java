@@ -1,7 +1,5 @@
 package com.company;
 
-import javax.swing.*;
-
 //basic instantiation
 public class Main {
 

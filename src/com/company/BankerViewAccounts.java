@@ -7,8 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 
+//View for banker to see queried stocks
 public class BankerViewAccounts {
-    Bank b;
+    private Bank b;
     public BankerViewAccounts(Bank bb){
         b = bb;
     }

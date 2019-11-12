@@ -21,14 +21,6 @@ public abstract class Login {
         usernames = new HashSet();
     }
 
-//    public Person getUser(String u, String p){
-//    	SQLConnection sc = new SQLConnection();
-//		sc.TheSqlConnection();
-//		Person user = sc.getUser(u, p);
-//		sc.close();
-//        return user;
-//    }
-
     public void placeComponents() {
         JFrame frame = new JFrame("FancyBank");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,6 +64,7 @@ public abstract class Login {
 
         frame.setVisible(true);
 
+        //interacts with static db methods in Person.java
         ActionListener loginButtonListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -79,8 +72,6 @@ public abstract class Login {
                 String p = new String (passwordText.getPassword());
                 JButton source = (JButton) e.getSource();
 
-//                System.out.println("t: " + t);
-//                System.out.println("p: " + p);
 
                 if (t.isEmpty() || t == null || p.isEmpty() || p == null){
                     JOptionPane.showMessageDialog(source, "Username or password has not been entered!");
@@ -165,18 +156,6 @@ public abstract class Login {
         });
     }
 
-    public void put(PairCopy p, Person pp){
-        users.put(p, pp);
-    }
-
-    public Person remove(PairCopy p){
-        return users.remove(p);
-    }
-
-    public Collection<Person> values(){
-        return users.values();
-    }
-
     public Person get(PairCopy p){
         return users.get(p);
     }
@@ -187,5 +166,4 @@ public abstract class Login {
 
     public abstract boolean addUser(Person p);
 
-    public abstract boolean addOwner(Owner o);
 }

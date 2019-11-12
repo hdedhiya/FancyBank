@@ -18,45 +18,6 @@ public class SecurityAccount {
     public double queryPrice(String name,String code,int shares){
         return stockMarket.queryPrice(name,code,shares);
     }
-    public int buyStock(String name,String code,int shares) {
-        double result = queryPrice(name, code, shares);
-        if (result >0){
-            Stock s = stockMarket.buyStock(name, code, shares);
-            savings.removeBalance(s.getPrice() * shares);
-            stocks.add(s);
-            return 1;//success
-        }
-        else{
-            return (int)result;//-1 for not enough shares; -2 for stock not exists
-        }
-    }
-    public double viewProfit(){
-        Iterator<Stock> iterator=stocks.iterator();
-        double profit=0;
-        while(iterator.hasNext()){
-            Stock s=iterator.next();
-            profit+=stockMarket.queryProfit(s.getName(),s.getCode(),s.getShares(),s.getPrice());
-        }
-        return profit;
-    }
-
-    public double sellStock(String name,String code){
-        Iterator<Stock> iterator=stocks.iterator();
-        while(iterator.hasNext()){
-            Stock s =iterator.next();
-            if(s.getName().equals(name)&&s.getCode().equals(code)){
-                double money=stockMarket.sellStock(s);
-                if(money!=-1) {
-                    savings.addBalance(money);
-                    stocks.remove(s);
-                    return money;
-                }
-                else
-                    return -1;//does not exist
-            }
-        }
-        return -1;//the stock does not exist
-    }
 
     public double queryPriceForAll(){
         Iterator<Stock> iterator=stocks.iterator();
@@ -73,10 +34,6 @@ public class SecurityAccount {
         return res;
     }
 
-    public double showPurchasePower(){
-        return savings.getBalance();
-    }
-
     @Override
     public String toString(){
         String str="";
@@ -89,9 +46,7 @@ public class SecurityAccount {
         }
         return str;
     }
-    public String viewMarket(){
-        return stockMarket.toString();
-    }
+
 
     public static boolean addStock(int accountNum, String companyName, String code, double price, int share) {
         boolean success = true;

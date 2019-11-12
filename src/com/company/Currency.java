@@ -1,6 +1,6 @@
 package com.company;
 
-//generic currenct class that is defined in Main and given to Bank on instantiation/
+//generic currency class that is defined in Main and given to Bank on instantiation/
 public class Currency {
     private char icon;
     private double conversionToBaseRate;

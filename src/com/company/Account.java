@@ -63,22 +63,9 @@ public abstract class Account {
         return index;
     }
 
-    public Integer getCount(){
-        return count;
-    }
-
-    public void addTransaction(Transaction t){
-        ts.put(transactionCounter, t);
-        transactionCounter += 1;
-    }
-
-    public Collection<Transaction> getAllTransactions(){
-        return ts.values();
-    }
-
-    public abstract Transaction applyInterest();
-
     public abstract String toString();
+
+    //static functions that query the DB
 
     public static boolean addTransaction(int accountNum, AccountType accountType, String transactionType, String initBalance, String finalBalance, String fee) {
         long millis=System.currentTimeMillis();

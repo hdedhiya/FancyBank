@@ -22,10 +22,6 @@ public class Person {
         return password;
     }
 
-    public void setPassword(String p){
-        password = p;
-    }
-
 	public String getType() {
 		return type;
 	}
