@@ -1,3 +1,12 @@
+CS591 FancierBank design doc
+
+Team 19
+Jingzhou Xue    U10828768   jxue@bu.edu
+Kaijia You
+Peiqing Lu
+Harsh
+
+
 The reason we choose Harsh’s original design is its GUI contains only one page and we can implement all the functions and operations in the page. In this way, our software is more user-friendly. In addition, its class structure is better because every class is reasonably divided.
 Based on the original design, we decide to implement the SQL part which connects our data to database and Security market part which simulate the real stock market. So far, most of our plans work very well. Also, the money store in bank has only one kind of currency like Dollar but customers could store all kinds of currencies into bank. For the financial market, it will improve the efficiency of Currency circulation; For the bank, it doesn’t need to make currency conversion for so many times. For customer, he doesn’t need to calculate the conversion rate to determine whether he can afford a transaction or stock.
 
