@@ -271,11 +271,16 @@ public class ViewAccounts{
 //                                            b.setTransactionCounter(b.getTransactionCounter() + 1);
                                         }
                                         else{
-                                        	sc.updateAccount(account_index, finalB);
-                                            sc.addTransaction(account_index, AccountType.LOANACCOUNT, "Deposit", Double.toString(initB), Double.toString(finalB), "0");
+                                            if (account.getBalance() < 0) {
+                                                sc.updateAccount(account_index, finalB);
+                                                sc.addTransaction(account_index, AccountType.LOANACCOUNT, "Deposit", Double.toString(initB), Double.toString(finalB), "0");
 //                                            bc.getAccount(account_index).addTransaction(new Transaction("Loan", bc.getAccount(account_index).getIndex(), "Deposit", initB, bc.getAccount(account_index).getBalance(), 0));
 //                                            b.recentTransactions.put(b.getTransactionCounter(), new Transaction("Loan", bc.getAccount(account_index).getIndex(), "Deposit", initB, bc.getAccount(account_index).getBalance(), 0));
 //                                            b.setTransactionCounter(b.getTransactionCounter() + 1);
+                                            }
+                                            else{
+                                                JOptionPane.showMessageDialog(source, "Loan is paid off already!");
+                                            }
                                         }
                                     }
                                     place(bc);
@@ -401,25 +406,50 @@ public class ViewAccounts{
                             double amt = Double.parseDouble(amtS);
                             if (c != null) {
                                 if (amt > 0) {
-                                    if (bc.getAccount(account_index) instanceof Checking) {
-                                        if (bc.getAccount(account_index).getBalance() >= (amt * c.getConversionToBaseRate()) + b.getCheckingAccountTransactionFee()) {
+                                    SQLConnection sc = new SQLConnection();
+                                    sc.TheSqlConnection();
+                                    Account currAcc = sc.getAccount(account_index);
+                                    if (currAcc instanceof Checking) {
+                                        if (currAcc.getBalance() >= (amt * c.getConversionToBaseRate()) + b.getCheckingAccountTransactionFee()) {
                                             String altAccS = JOptionPane.showInputDialog("Enter account number of other account: ");
                                             Integer alt_index = Integer.valueOf(altAccS);
                                             if (alt_index != account_index) {
-                                                Account a = bc.getAccount(alt_index);
-                                                if (a != null) {
-                                                    double initBa = a.getBalance();
-                                                    double initB = bc.getAccount(account_index).getBalance();
-                                                    bc.getAccount(account_index).removeBalance((amt * c.getConversionToBaseRate()) + b.getCheckingAccountTransactionFee());
-                                                    bc.getAccount(alt_index).addBalance((amt * c.getConversionToBaseRate()));
-                                                  //  bc.getAccount(account_index).addTransaction(new Transaction("Checking", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), b.getCheckingAccountTransactionFee()));
-                                                 //   b.recentTransactions.put(b.getTransactionCounter(), new Transaction("Checking", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), b.getCheckingAccountTransactionFee()));
-                                                    b.setTransactionCounter(b.getTransactionCounter() + 1);
-                                                  //  a.addTransaction(new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
-                                                 //   b.recentTransactions.put(b.getTransactionCounter(), new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
-                                                    b.setTransactionCounter(b.getTransactionCounter() + 1);
+                                                Account altAcc = sc.getAccount(alt_index);
+                                                if (altAcc != null) {
+                                                    if (altAcc instanceof Loan){
+                                                        if (altAcc.getBalance() < 0){
+                                                            double altInitB = altAcc.getBalance();
+                                                            double initB = currAcc.getBalance();
+                                                            double finB = initB - ((amt * c.getConversionToBaseRate()) + b.getCheckingAccountTransactionFee());
+                                                            double altFinB = altInitB + (amt * c.getConversionToBaseRate());
+                                                            sc.updateAccount(account_index, finB);
+                                                            sc.addTransaction(account_index, currAcc.getAccountType(), "Transfer from", String.valueOf(initB), String.valueOf(finB), String.valueOf(b.getCheckingAccountTransactionFee()));
+                                                            sc.updateAccount(alt_index, altFinB);
+                                                            sc.addTransaction(alt_index, altAcc.getAccountType(), "Transfer to", String.valueOf(altInitB), String.valueOf(altFinB), "0");
+                                                        }
+                                                        else{
+                                                            JOptionPane.showMessageDialog(source, "Loan is already paid off!");
+                                                        }
+                                                    }
+                                                    else {
+                                                        double altInitB = altAcc.getBalance();
+                                                        double initB = currAcc.getBalance();
+                                                        double finB = initB - ((amt * c.getConversionToBaseRate()) + b.getCheckingAccountTransactionFee());
+                                                        double altFinB = altInitB + (amt * c.getConversionToBaseRate());
+                                                        sc.updateAccount(account_index, finB);
+                                                        sc.addTransaction(account_index, currAcc.getAccountType(), "Transfer from", String.valueOf(initB), String.valueOf(finB), String.valueOf(b.getCheckingAccountTransactionFee()));
+                                                        sc.updateAccount(alt_index, altFinB);
+                                                        sc.addTransaction(alt_index, altAcc.getAccountType(), "Transfer to", String.valueOf(altInitB), String.valueOf(altFinB), "0");
+                                                        //bc.getAccount(alt_index).addBalance((amt * c.getConversionToBaseRate()));
+                                                        //  bc.getAccount(account_index).addTransaction(new Transaction("Checking", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), b.getCheckingAccountTransactionFee()));
+                                                        //   b.recentTransactions.put(b.getTransactionCounter(), new Transaction("Checking", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), b.getCheckingAccountTransactionFee()));
+                                                        //b.setTransactionCounter(b.getTransactionCounter() + 1);
+                                                        //  a.addTransaction(new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
+                                                        //   b.recentTransactions.put(b.getTransactionCounter(), new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
+                                                        //b.setTransactionCounter(b.getTransactionCounter() + 1);
+                                                    }
                                                 } else {
-                                                    JOptionPane.showMessageDialog(source, "Other account does not exist or does not belong to the user.");
+                                                    JOptionPane.showMessageDialog(source, "Other account does not exist!");
                                                 }
                                             } else {
                                                 JOptionPane.showMessageDialog(source, "Entered the same account number");
@@ -427,25 +457,48 @@ public class ViewAccounts{
                                         } else {
                                             JOptionPane.showMessageDialog(source, "Insufficient funds. The checking account transaction fee is " + b.getCheckingAccountTransactionFee() + ".");
                                         }
-                                    } else if (bc.getAccount(account_index) instanceof Savings) {
-                                        if (bc.getAccount(account_index).getBalance() >= (amt * c.getConversionToBaseRate())) {
+                                    } else if (currAcc instanceof Savings) {
+                                        if (currAcc.getBalance() >= (amt * c.getConversionToBaseRate())) {
                                             String altAccS = JOptionPane.showInputDialog("Enter account number of other account: ");
                                             Integer alt_index = Integer.valueOf(altAccS);
-                                            Account a = bc.getAccount(alt_index);
+                                            Account altAcc = sc.getAccount(alt_index);
                                             if (alt_index != account_index) {
-                                                if (a != null) {
-                                                    double initBa = a.getBalance();
-                                                    double initB = bc.getAccount(account_index).getBalance();
-                                                    bc.getAccount(account_index).removeBalance((amt * c.getConversionToBaseRate()));
-                                                    bc.getAccount(alt_index).addBalance((amt * c.getConversionToBaseRate()));
-                                                   // bc.getAccount(account_index).addTransaction(new Transaction("Savings", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), 0));
-                                                  //  b.recentTransactions.put(b.getTransactionCounter(), new Transaction("Savings", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), 0));
-                                                    b.setTransactionCounter(b.getTransactionCounter() + 1);
-                                                  //  a.addTransaction(new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
-                                                  //  b.recentTransactions.put(b.getTransactionCounter(), new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
-                                                    b.setTransactionCounter(b.getTransactionCounter() + 1);
+                                                if (altAcc != null) {
+                                                    if (altAcc instanceof Loan){
+                                                        if (altAcc.getBalance() < 0){
+                                                            double altInitB = altAcc.getBalance();
+                                                            double initB = currAcc.getBalance();
+                                                            double finB = initB - ((amt * c.getConversionToBaseRate()));
+                                                            double altFinB = altInitB + (amt * c.getConversionToBaseRate());
+                                                            sc.updateAccount(account_index, finB);
+                                                            sc.addTransaction(account_index, currAcc.getAccountType(), "Transfer from", String.valueOf(initB), String.valueOf(finB), "0");
+                                                            sc.updateAccount(alt_index, altFinB);
+                                                            sc.addTransaction(alt_index, altAcc.getAccountType(), "Transfer to", String.valueOf(altInitB), String.valueOf(altFinB), "0");
+                                                        }
+                                                        else{
+                                                            JOptionPane.showMessageDialog(source, "Loan is already paid off!");
+                                                        }
+                                                    }
+                                                    else {
+                                                        double altInitB = altAcc.getBalance();
+                                                        double initB = currAcc.getBalance();
+                                                        double finB = initB - ((amt * c.getConversionToBaseRate()));
+                                                        double altFinB = altInitB + (amt * c.getConversionToBaseRate());
+                                                        sc.updateAccount(account_index, finB);
+                                                        sc.addTransaction(account_index, currAcc.getAccountType(), "Transfer from", String.valueOf(initB), String.valueOf(finB), "0");
+                                                        sc.updateAccount(alt_index, altFinB);
+                                                        sc.addTransaction(alt_index, altAcc.getAccountType(), "Transfer to", String.valueOf(altInitB), String.valueOf(altFinB), "0");
+                                                        //bc.getAccount(account_index).removeBalance((amt * c.getConversionToBaseRate()));
+                                                        //bc.getAccount(alt_index).addBalance((amt * c.getConversionToBaseRate()));
+                                                        // bc.getAccount(account_index).addTransaction(new Transaction("Savings", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), 0));
+                                                        //  b.recentTransactions.put(b.getTransactionCounter(), new Transaction("Savings", bc.getAccount(account_index).getIndex(), "Transfer from", initB, bc.getAccount(account_index).getBalance(), 0));
+                                                        //b.setTransactionCounter(b.getTransactionCounter() + 1);
+                                                        //  a.addTransaction(new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
+                                                        //  b.recentTransactions.put(b.getTransactionCounter(), new Transaction(a.getAccountType(), a.getIndex(), "Transfer to", initBa, a.getBalance(), 0));
+                                                        //b.setTransactionCounter(b.getTransactionCounter() + 1);
+                                                    }
                                                 } else {
-                                                    JOptionPane.showMessageDialog(source, "Other account does not exist or does not belong to the user.");
+                                                    JOptionPane.showMessageDialog(source, "Other account does not exist!");
                                                 }
                                             } else {
                                                 JOptionPane.showMessageDialog(source, "Entered the same account number");
@@ -480,84 +533,9 @@ public class ViewAccounts{
             }
         });
 
-        JButton transferTo = new JButton("Transfer to");
-        transferTo.setBounds(10, 190, 140, 25);
-        panel.add(transferTo);
-
-        //add to current selection
-        transferTo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JButton source = (JButton) e.getSource();
-                int selected = table.getSelectedRow();
-                if (selected != -1) {
-                    String altAccS = JOptionPane.showInputDialog("Enter account number of other account: ");
-                    try {
-                        Integer alt_index = Integer.valueOf(altAccS);
-                        Account a = bc.getAccount(alt_index);
-                        Integer account_index = (Integer) tabelModel.getValueAt(selected, 1);
-                        if (a != null) {
-                            if (a instanceof Loan) {
-                                JOptionPane.showMessageDialog(source, "Account given is a loan.");
-                            } else {
-                                String amtS = JOptionPane.showInputDialog("Enter amount to transfer: ");
-                                Currency c = (Currency)JOptionPane.showInputDialog(source, "Which currency", "Currency Selection", JOptionPane.QUESTION_MESSAGE, null, b.getAllCurrencies(), b.getAllCurrencies()[0]);
-                                double amt = Double.parseDouble(amtS);
-                                if (c != null) {
-                                    if (a instanceof Checking) {
-                                        if (a.getBalance() >= (amt * c.getConversionToBaseRate()) + b.getCheckingAccountTransactionFee()) {
-                                            double initBa = a.getBalance();
-                                            double initB = bc.getAccount(account_index).getBalance();
-                                            a.removeBalance((amt * c.getConversionToBaseRate()) + b.getCheckingAccountTransactionFee());
-                                            bc.getAccount(account_index).addBalance((amt * c.getConversionToBaseRate()));
-                                            //bc.getAccount(account_index).addTransaction(new Transaction(bc.getAccount(account_index).getAccountType(), bc.getAccount(account_index).getIndex(), "Transfer to", initB, bc.getAccount(account_index).getBalance(), 0));
-                                            //b.recentTransactions.put(b.getTransactionCounter(), new Transaction(bc.getAccount(account_index).getAccountType(), bc.getAccount(account_index).getIndex(), "Transfer to", initB, bc.getAccount(account_index).getBalance(), 0));
-                                            b.setTransactionCounter(b.getTransactionCounter() + 1);
-                                            //a.addTransaction(new Transaction(a.getAccountType(), a.getIndex(), "Transfer from", initBa, a.getBalance(), b.getCheckingAccountTransactionFee()));
-                                           // b.recentTransactions.put(b.getTransactionCounter(), new Transaction(a.getAccountType(), a.getIndex(), "Transfer from", initBa, a.getBalance(), b.getCheckingAccountTransactionFee()));
-                                            b.setTransactionCounter(b.getTransactionCounter() + 1);
-                                        } else {
-                                            JOptionPane.showMessageDialog(source, "Insufficient funds. The checking account transaction fee is " + b.getCheckingAccountTransactionFee() + ".");
-                                        }
-                                    } else {
-                                        if (a.getBalance() >= (amt * c.getConversionToBaseRate())) {
-                                            double initBa = a.getBalance();
-                                            double initB = bc.getAccount(account_index).getBalance();
-                                            a.removeBalance((amt * c.getConversionToBaseRate()));
-                                            bc.getAccount(account_index).addBalance((amt * c.getConversionToBaseRate()));
-                                           // bc.getAccount(account_index).addTransaction(new Transaction(bc.getAccount(account_index).getAccountType(), bc.getAccount(account_index).getIndex(), "Transfer to", initB, bc.getAccount(account_index).getBalance(), 0));
-                                           // b.recentTransactions.put(b.getTransactionCounter(), new Transaction(bc.getAccount(account_index).getAccountType(), bc.getAccount(account_index).getIndex(), "Transfer to", initB, bc.getAccount(account_index).getBalance(), 0));
-                                            b.setTransactionCounter(b.getTransactionCounter() + 1);
-                                           // a.addTransaction(new Transaction(a.getAccountType(), a.getIndex(), "Transfer from", initBa, a.getBalance(), 0));
-                                           // b.recentTransactions.put(b.getTransactionCounter(), new Transaction(a.getAccountType(), a.getIndex(), "Transfer from", initBa, a.getBalance(), 0));
-                                            b.setTransactionCounter(b.getTransactionCounter() + 1);
-                                        } else {
-                                            JOptionPane.showMessageDialog(source, "Insufficient funds.");
-                                        }
-                                    }
-                                    place(bc);
-                                    frame.dispose();
-                                }
-                                else{
-                                    JOptionPane.showMessageDialog(source, "Did not enter a currency.");
-                                }
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(source, "Invalid account number.");
-                        }
-                    }
-                    catch(NumberFormatException e1){
-                        JOptionPane.showMessageDialog(source, "Enter a valid number.");
-                    }
-                }
-                else{
-                    JOptionPane.showMessageDialog(source, "Please select an account from the list.");
-                }
-            }
-        });
 
         JButton viewTs = new JButton("View Transactions");
-        viewTs.setBounds(10, 220, 140, 25);
+        viewTs.setBounds(10, 190, 140, 25);
         panel.add(viewTs);
 
 
@@ -580,7 +558,7 @@ public class ViewAccounts{
         });
 
         JButton resolveLoan = new JButton("Resolve Loan");
-        resolveLoan.setBounds(10, 250, 140, 25);
+        resolveLoan.setBounds(10, 220, 140, 25);
         panel.add(resolveLoan);
 
 
@@ -636,7 +614,7 @@ public class ViewAccounts{
         });
 
         JButton resolveLoans = new JButton("Resolve all Loans");
-        resolveLoans.setBounds(10, 280, 140, 25);
+        resolveLoans.setBounds(10, 250, 140, 25);
         panel.add(resolveLoans);
 
 
@@ -658,7 +636,7 @@ public class ViewAccounts{
         });
 
         JButton viewStock = new JButton("View My Stocks");
-        viewStock.setBounds(10, 310, 140, 25);
+        viewStock.setBounds(10, 280, 140, 25);
         panel.add(viewStock);
 
 
