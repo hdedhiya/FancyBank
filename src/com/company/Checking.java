@@ -12,11 +12,6 @@ public class Checking extends Account {
     }
 
     @Override
-    public Transaction applyInterest() {
-        return null;
-    }
-
-    @Override
     public String toString() {
         return "Checking Account " + this.getIndex() + " Balance: " + this.getBalance();
     }

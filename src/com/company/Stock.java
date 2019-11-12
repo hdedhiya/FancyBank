@@ -39,10 +39,6 @@ public class Stock {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public Integer getShares() {
         return shares;
     }

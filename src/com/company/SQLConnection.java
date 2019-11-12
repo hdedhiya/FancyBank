@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+//SQL connection used in every class that uses DB
 public class SQLConnection {
 	//change the "test" here to the name of your own database
 	private static final String URL="jdbc:mysql://localhost:3306/fancybank?useUnicode=true&characterEncoding=utf8";

@@ -1,6 +1,7 @@
 package com.company;
 
 public enum AccountType {
+    //Use enum instead of strings for accountType
     SAVINGACCOUNT("Saving"),
     CHECKINGACCOUNT("Checking"),
     LOANACCOUNT("Loan");

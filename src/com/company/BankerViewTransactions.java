@@ -7,9 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 
-public class ViewRecent {
-    Bank b;
-    public ViewRecent(Bank bb){
+public class BankerViewTransactions {
+    private Bank b;
+    public BankerViewTransactions(Bank bb){
         b = bb;
     }
 

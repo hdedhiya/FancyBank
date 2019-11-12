@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class ViewTransactions {
-    Bank b;
+    private Bank b;
     public ViewTransactions(Bank bb){
         b = bb;
     }
