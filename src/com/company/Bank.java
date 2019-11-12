@@ -134,6 +134,7 @@ public class Bank extends Login{
                         //ex.printStackTrace();
                     }
                 }
+                sc.close();
             }
         });
 
@@ -149,6 +150,7 @@ public class Bank extends Login{
                 sc.TheSqlConnection();
                 sc.applySavingsInterest(savingsInterestRate, savingsMinAmount);
                 sc.applyLoanInterestRate(loanInterestRate);
+                sc.close();
 //                Collection<Person> customers = values();
 //                for (Person p: customers){
 //                    if (p instanceof BankCustomer){
@@ -190,6 +192,7 @@ public class Bank extends Login{
                     bva.place(bk, ts);
                     frame.dispose();
                 }
+                sc.close();
             }
         });
 
@@ -223,6 +226,7 @@ public class Bank extends Login{
                         JOptionPane.showMessageDialog(source, "Enter a valid number!");
                     }
                 }
+                sc.close();
             }
         });
 
@@ -239,6 +243,7 @@ public class Bank extends Login{
                 bk.updateStockMarket();
                 String[] fees = {"The stock market price has been updated "};
                 JOptionPane.showMessageDialog(source, fees);
+
 
             }
         });
@@ -334,6 +339,7 @@ public class Bank extends Login{
                 	SQLConnection sc = new SQLConnection();
             		sc.TheSqlConnection();
                 	sc.changeCustomerPW(p.getUsername(), str);
+                	sc.close();
                     JOptionPane.showMessageDialog(source, "Password changed!");
                 }
                 else {

@@ -14,7 +14,7 @@ public class ViewMarket {
     public ViewMarket(Bank bb){
         b = bb;
     }
-    public void place(BankCustomer bc){
+    public void place(BankCustomer bc, Savings savingAccount){
         JFrame frame = new JFrame("Stock Market");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(false);
@@ -30,7 +30,9 @@ public class ViewMarket {
         //Collection<Stock> allStocks = new StockMarket().stockMarket;
         SQLConnection sc = new SQLConnection();
         sc.TheSqlConnection();
-        Collection<Stock> market = new ArrayList<>();
+
+
+        Collection<Stock> market = sc.getMarket();
         String cols[] = {"Company Name", "Code", "Price", "Share"};
         DefaultTableModel tabelModel = new DefaultTableModel(cols, 0){
             @Override
@@ -63,7 +65,7 @@ public class ViewMarket {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ViewSecurity vs = new ViewSecurity(b);
-                vs.place(bc);
+                vs.place(bc, savingAccount);
                 frame.dispose();
             }
         });
@@ -78,48 +80,89 @@ public class ViewMarket {
 
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-                //todo
+
                 //buy chosen stock. ask for shares. check for purchasing power
                 //update after buying successfully
-            }
-        });
-
-        //select one stock and show some more info on the stock
-        JButton deleteAccount = new JButton("Show Detail");
-        deleteAccount.setBounds(10, 70, 140, 25);
-        panel.add(deleteAccount);
-
-        deleteAccount.addActionListener(new ActionListener() {
-            @Override
-
-            public void actionPerformed(ActionEvent e) {
-                JButton source = (JButton) e.getSource();
                 int selected = table.getSelectedRow();
                 if (selected != -1) {
-                    //todo
-                    //detail
-                }
-                else{
+                    String amtS = JOptionPane.showInputDialog("Enter number of shares to buy: ");
+                    String companyName = (String) tabelModel.getValueAt(selected, 0); //companyName, code, price, share. share at col 3
+                    String code = (String) tabelModel.getValueAt(selected, 1); // code at columm 1
+                    double price = (double) tabelModel.getValueAt(selected, 2); //companyName, code, price, share. share at col 3
+                    int shares = (int) tabelModel.getValueAt(selected, 3); //companyName, code, price, share. share at col 3
+                    String username = bc.getUsername();
+                    try {
+                        if (amtS != null && !amtS.isEmpty()) {
+                            int amt = Integer.parseInt(amtS);
+                            boolean canBuy = checkEnough(amt, shares);
+                            SQLConnection sc = new SQLConnection();
+                            sc.TheSqlConnection();
+                            double balance = sc.getAccount(savingAccount.getIndex()).getBalance();
+
+                            double paidPrice = price * amt;
+                            int minimum = 100; //minimum amount on saving account to buy stock
+                            double purchasingPower = balance - minimum;
+                            //boolean powerEnoughToBuy = checkPowerEnough();
+                            if(canBuy && purchasingPower >= paidPrice) {
+                                int newAmt = shares - amt;
+                                sc.updateStockMarket(newAmt, code);
+                                sc.addStock(savingAccount.getIndex(), companyName, code, price, amt);
+                                System.out.println("my current balance is " + savingAccount.getBalance());
+                                System.out.println("need to pay " + paidPrice);
+                                double newBalance = balance - paidPrice;
+                                sc.updateAccount(savingAccount.getIndex(), newBalance);
+                                sc.close();
+
+                                ViewSecurity vs = new ViewSecurity(b);
+                                vs.place(bc, savingAccount);
+                                frame.dispose();
+
+                            } else {
+                                JOptionPane.showMessageDialog(source, "You don't have enough purchasing power to buy");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(source, "Please enter a valid amount of shares");
+                        }
+
+                    } catch (NumberFormatException e1) {
+                        JOptionPane.showMessageDialog(source, "Enter a valid number.");
+
+                    }
+                }else {
                     JOptionPane.showMessageDialog(source, "Please select a row.");
                 }
             }
         });
 
+        JButton purchasingPowerButton = new JButton("Purchasing Power");
+        purchasingPowerButton.setBounds(10, 180, 140, 25);
+        panel.add(purchasingPowerButton);
+
+        purchasingPowerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton source = (JButton) e.getSource();
+                SQLConnection sc = new SQLConnection();
+                sc.TheSqlConnection();
+                double balance = sc.getAccount(savingAccount.getIndex()).getBalance();
+                sc.close();
+                int minimum = 100; //minimum amount on saving account to buy stock
+                double purchasingPower = balance - minimum;
+                JOptionPane.showMessageDialog(source, "Your remaining purchasing power is " + purchasingPower);
 
 
+
+            }
+        });
 
         frame.getContentPane().add(splitPane);
         frame.setVisible(true);
     }
 
 
-    public boolean checkEnough(double amt, double comparison){
-        if ((amt) > comparison){
-            return true;
-        }
-        else {
-            return false;
-        }
+    public boolean checkEnough(double amt, double comparison) {
+        return(amt <= comparison);
+
     }
 
     }
