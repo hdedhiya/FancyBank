@@ -32,7 +32,7 @@ public class ViewTransactions {
                 return false;
             }
         };
-        
+
         ArrayList<Transaction> allTrans = Account.getTransactions(actNum);
 
         if(allTrans.size() != 0) {
