@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5d9d6c1a-0f84-41ea-8c1d-337fbb4a4822" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/AccountType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/AccountType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/market.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Bank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Bank.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/SQLConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/SQLConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/StockMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/StockMarket.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/ViewMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/ViewMarket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/ViewSecurity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/ViewSecurity.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
