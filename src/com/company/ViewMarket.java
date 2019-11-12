@@ -28,11 +28,8 @@ public class ViewMarket {
 
         // pull down the stockmarket from database
         //Collection<Stock> allStocks = new StockMarket().stockMarket;
-        SQLConnection sc = new SQLConnection();
-        sc.TheSqlConnection();
 
-
-        Collection<Stock> market = sc.getMarket();
+        Collection<Stock> market = StockMarket.getMarket();
         String cols[] = {"Company Name", "Code", "Price", "Share"};
         DefaultTableModel tabelModel = new DefaultTableModel(cols, 0){
             @Override
@@ -97,17 +94,15 @@ public class ViewMarket {
                             boolean canBuy = checkEnough(amt, shares);
                             if(canBuy) {
                                 //connect to db
-                                SQLConnection sc = new SQLConnection();
-                                sc.TheSqlConnection();
                                 StockMarket market = new StockMarket();
 
                                 int newAmt = shares - amt;
-                                sc.updateStockMarket(newAmt, code);
-                                sc.addStock(savingAccount.getIndex(), companyName, code, price, amt);
+                                StockMarket.updateStockMarket(newAmt, code);
+                                SecurityAccount.addStock(savingAccount.getIndex(), companyName, code, price, amt);
                                 int newBalance = shares - amt;
                                 double purchase = market.queryPrice(companyName, code, amt);
-                                sc.updateStockMarket(newBalance, code);
-                                sc.updateAccount(savingAccount.getIndex(), savingAccount.getBalance() - purchase);
+                                StockMarket.updateStockMarket(newBalance, code);
+                                BankCustomer.updateAccount(savingAccount.getIndex(), savingAccount.getBalance() - purchase);
                                 ViewSecurity vs = new ViewSecurity(b);
                                 vs.place(bc, savingAccount);
                                 frame.dispose();

@@ -1,16 +1,15 @@
 package com.company;
 
 import java.lang.reflect.Array;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class StockMarket {
     ArrayList<Stock> stockMarket;
     public StockMarket(){
-        SQLConnection sc = new SQLConnection();
-        sc.TheSqlConnection();
-        stockMarket = sc.getMarket();
-        sc.close();
+        stockMarket = getMarket();
     }
 
     public ArrayList<Stock> getStockMarket() {
@@ -64,6 +63,58 @@ public class StockMarket {
             }
         }
         return -1;
+    }
+
+    public static void updateStockMarket(int shares, String code) {
+        String sql = "update market set share = '" + shares + "' where code = '" + code + "'";
+        PreparedStatement pst = null;
+        SQLConnection sc = new SQLConnection();
+        try {
+            pst = (PreparedStatement) sc.getConn().prepareStatement(sql);
+            pst.execute();
+            sc.close();
+        } catch (Exception e) {
+            System.out.println("Failed to update Stock market");
+        }
+
+    }
+
+
+    public static void updateMarketPrice(double price, String code) {
+        String sql = "update market set price = '" + price + "' where code = '" + code + "'";
+        PreparedStatement pst = null;
+        SQLConnection sc = new SQLConnection();
+        try {
+            pst = (PreparedStatement) sc.getConn().prepareStatement(sql);
+            pst.execute();
+            sc.close();
+        } catch (Exception e) {
+            System.out.println("Failed to update Stock market");
+        }
+    }
+
+    public static ArrayList<Stock> getMarket() {
+        String sql = "select * from market";
+        PreparedStatement pst = null;
+        List<Stock> stocks = new ArrayList<Stock>();
+        SQLConnection sc = new SQLConnection();
+        try {
+            pst = (PreparedStatement) sc.getConn().prepareStatement(sql);
+            java.sql.ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                Stock stock = null;
+                String companyName = rs.getString("companyName");
+                String code = rs.getString("code");
+                double price = Double.parseDouble(rs.getString("price"));
+                int share = Integer.parseInt(rs.getString("share"));
+                stock = new Stock(companyName, code, price, share);
+                stocks.add(stock);
+            }
+            sc.close();
+        }catch (Exception e) {
+            System.out.println("don't get stock");
+        }
+        return (ArrayList<Stock>) stocks;
     }
 
     @Override

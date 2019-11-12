@@ -33,9 +33,7 @@ public class ViewTransactions {
             }
         };
         
-        SQLConnection sc = new SQLConnection();
-		sc.TheSqlConnection();
-        ArrayList<Transaction> allTrans = sc.getTransactions(actNum);
+        ArrayList<Transaction> allTrans = Account.getTransactions(actNum);
 
         if(allTrans.size() != 0) {
         	for(int i = 0;i < allTrans.size();i++) {

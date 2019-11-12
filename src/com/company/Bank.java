@@ -113,9 +113,7 @@ public class Bank extends Login{
 //                vr.place(bk, recentTransactions.values());
 //                recentTransactions.clear();
 //                transactionCounter = 0;
-//
-                SQLConnection sc = new SQLConnection();
-                sc.TheSqlConnection();
+
                 String d = JOptionPane.showInputDialog("Enter date to query (Format: yyyy/MM/dd): ");
                 if (d != null) {
                     SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
@@ -123,7 +121,7 @@ public class Bank extends Login{
                     try {
                         parsed = format.parse(d);
                         java.sql.Date sql = new java.sql.Date(parsed.getTime());
-                        ArrayList<Transaction> ts = sc.queryTransactionsByDate(sql);
+                        ArrayList<Transaction> ts = Transaction.queryTransactionsByDate(sql);
                         ViewRecent vr = new ViewRecent(Bank.this);
                         vr.place(bk, ts);
                         //sc.queryTransactionsByDate()
@@ -144,10 +142,9 @@ public class Bank extends Login{
             @Override
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-                SQLConnection sc = new SQLConnection();
-                sc.TheSqlConnection();
-                sc.applySavingsInterest(savingsInterestRate, savingsMinAmount);
-                sc.applyLoanInterestRate(loanInterestRate);
+
+                Account.applySavingsInterest(savingsInterestRate, savingsMinAmount);
+                Account.applyLoanInterestRate(loanInterestRate);
 //                Collection<Person> customers = values();
 //                for (Person p: customers){
 //                    if (p instanceof BankCustomer){
@@ -180,11 +177,9 @@ public class Bank extends Login{
 //                recentTransactions.clear();
 //                transactionCounter = 0;
 //
-                SQLConnection sc = new SQLConnection();
-                sc.TheSqlConnection();
                 String d = JOptionPane.showInputDialog("Enter username: ");
                 if (d != null) {
-                    ArrayList<Account> ts = sc.getAccounts(d);
+                    ArrayList<Account> ts = BankCustomer.getAccounts(d);
                     BankerViewAccounts bva = new BankerViewAccounts(Bank.this);
                     bva.place(bk, ts);
                     frame.dispose();
@@ -208,12 +203,10 @@ public class Bank extends Login{
 //                recentTransactions.clear();
 //                transactionCounter = 0;
 //
-                SQLConnection sc = new SQLConnection();
-                sc.TheSqlConnection();
                 String d = JOptionPane.showInputDialog("Enter account number: ");
                 if (d != null) {
                     try {
-                        ArrayList<Transaction> ts = sc.getTransactions(Integer.valueOf(d));
+                        ArrayList<Transaction> ts = Account.getTransactions(Integer.valueOf(d));
                         ViewRecent vr = new ViewRecent(Bank.this);
                         vr.place(bk, ts);
                         frame.dispose();
@@ -235,8 +228,7 @@ public class Bank extends Login{
 
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-                SQLConnection sc = new SQLConnection();
-                sc.TheSqlConnection();
+
                 StockMarket stockMarket = new StockMarket();
                 ArrayList<Stock> market = stockMarket.getStockMarket();
                 for(Stock stock : market) {
@@ -244,7 +236,7 @@ public class Bank extends Login{
                     int r = random.nextInt(20);
                     double percentage = 1.0 + (10-r) / 100.0;
                     double newPrice = stock.getPrice() * percentage;
-                    sc.updateMarketPrice(newPrice, stock.getCode());
+                    StockMarket.updateMarketPrice(newPrice, stock.getCode());
                 }
                 String[] fees = {"The stock market price has been updated "};
                 JOptionPane.showMessageDialog(source, fees);

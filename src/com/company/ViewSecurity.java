@@ -30,9 +30,7 @@ public class ViewSecurity {
         //all of myStock list
         //get this from database
 
-        SQLConnection sc = new SQLConnection();
-        sc.TheSqlConnection();
-        ArrayList<Stock> allStocks = sc.getStocks(savingAccount.getIndex());
+        ArrayList<Stock> allStocks = SecurityAccount.getStocks(savingAccount.getIndex());
         StockMarket market = new StockMarket();
         SecurityAccount securityAccount = new SecurityAccount(allStocks, market, savingAccount);
 
@@ -111,13 +109,12 @@ public class ViewSecurity {
                             if(canSell) {
                                 //securityAccount.sellStock(name, code);
                                 //connect to db
-                                SQLConnection sc = new SQLConnection();
-                                sc.TheSqlConnection();
+
                                 int newAmt = shares - amt;
-                                sc.updateStock(index, newAmt);
+                                SecurityAccount.updateStock(index, newAmt);
                                 double sellPrice = securityAccount.queryPrice(name, code, amt);
 
-                                sc.updateAccount(savingAccount.getIndex(), savingAccount.getBalance() + sellPrice);
+                                BankCustomer.updateAccount(savingAccount.getIndex(), savingAccount.getBalance() + sellPrice);
                                 ViewSecurity vs = new ViewSecurity(b);
                                 vs.place(bc, savingAccount);
                                 frame.dispose();
@@ -155,12 +152,10 @@ public class ViewSecurity {
 
                 double profit = securityAccount.queryPriceForAll();
                 for(Stock stock : allStocks) {
-                    sc.deleteStock(stock.getIndex());
+                    SecurityAccount.deleteStock(stock.getIndex());
                 }
-                SQLConnection sc = new SQLConnection();
-                sc.TheSqlConnection();
-                sc.sellAllStock(savingAccount.getIndex());
-                sc.updateAccount(savingAccount.getIndex(), savingAccount.getBalance() + profit);
+                SecurityAccount.sellAllStock(savingAccount.getIndex());
+                BankCustomer.updateAccount(savingAccount.getIndex(), savingAccount.getBalance() + profit);
                 JOptionPane.showMessageDialog(source, "All Stocks sold successfully");
                 place(bc, savingAccount);
                 frame.dispose();
