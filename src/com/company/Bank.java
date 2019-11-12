@@ -1,6 +1,7 @@
 package com.company;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import java.util.LinkedHashMap;
+import java.util.Random;
 
 public class Bank extends Login{
 
@@ -236,9 +238,20 @@ public class Bank extends Login{
 
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-                bk.updateStockMarket();
+                SQLConnection sc = new SQLConnection();
+                sc.TheSqlConnection();
+                StockMarket stockMarket = new StockMarket();
+                ArrayList<Stock> market = stockMarket.getStockMarket();
+                for(Stock stock : market) {
+                    Random random = new Random();
+                    int r = random.nextInt(20);
+                    double percentage = 1.0 + (10-r) / 100.0;
+                    double newPrice = stock.getPrice() * percentage;
+                    sc.updateMarketPrice(newPrice, stock.getCode());
+                }
                 String[] fees = {"The stock market price has been updated "};
                 JOptionPane.showMessageDialog(source, fees);
+
 
             }
         });

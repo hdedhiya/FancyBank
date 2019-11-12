@@ -435,6 +435,18 @@ public class SQLConnection {
 		return (ArrayList<Stock>) stocks;
 	}
 
+	public void updateMarketPrice(double price, String code) {
+        String sql = "update market set price = '" + price + "' where code = '" + code + "'";
+        PreparedStatement pst = null;
+        try {
+            pst = (PreparedStatement) conn.prepareStatement(sql);
+            pst.execute();
+        } catch (Exception e) {
+            System.out.println("Failed to update Stock market");
+        }
+
+    }
+
 	public void insert(){
 	    
 	}

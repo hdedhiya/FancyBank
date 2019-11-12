@@ -136,28 +136,6 @@ public class ViewMarket {
             }
         });
 
-        //select one stock and show some more info on the stock
-        JButton deleteAccount = new JButton("Show Detail");
-        deleteAccount.setBounds(10, 70, 140, 25);
-        panel.add(deleteAccount);
-
-        deleteAccount.addActionListener(new ActionListener() {
-            @Override
-
-            public void actionPerformed(ActionEvent e) {
-                JButton source = (JButton) e.getSource();
-                int selected = table.getSelectedRow();
-                if (selected != -1) {
-                    //todo
-                    //detail
-                }
-                else{
-                    JOptionPane.showMessageDialog(source, "Please select a row.");
-                }
-            }
-        });
-
-
 
 
         frame.getContentPane().add(splitPane);

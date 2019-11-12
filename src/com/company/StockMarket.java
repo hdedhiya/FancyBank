@@ -13,7 +13,11 @@ public class StockMarket {
         sc.close();
     }
 
-    public double queryPrice(String name, String code,int shares){
+    public ArrayList<Stock> getStockMarket() {
+        return stockMarket;
+    }
+
+    public double queryPrice(String name, String code, int shares){
         Iterator<Stock> it= stockMarket.iterator();
 
         while(it.hasNext()){

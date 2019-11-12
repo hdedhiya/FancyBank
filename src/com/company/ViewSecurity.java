@@ -183,8 +183,6 @@ public class ViewSecurity {
                 JOptionPane.showMessageDialog(source, "Your profit is " + (profit-allPrice));
 
 
-                //todo
-
 
             }
         });
