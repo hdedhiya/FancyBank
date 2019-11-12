@@ -1,5 +1,10 @@
 The reason we choose Harsh’s original design is its GUI contains only one page and we can implement all the functions and operations in the page. In this way, our software is more user-friendly. In addition, its class structure is better because every class is reasonably divided.
 Based on the original design, we decide to implement the SQL part which connects our data to database and Security market part which simulate the real stock market. So far, most of our plans work very well. Also, the money store in bank has only one kind of currency like Dollar but customers could store all kinds of currencies into bank. For the financial market, it will improve the efficiency of Currency circulation; For the bank, it doesn’t need to make currency conversion for so many times. For customer, he doesn’t need to calculate the conversion rate to determine whether he can afford a transaction or stock.
+
+For our original design, everyone has some advantages. We decided use Harsh's code as base because the design is very clean, and we manage to implement some features from our own design to enrich the original fancybank features. Also, we break the huge GUI class into several GUI classes to make it as object oriented as possible.
+For our new Fancier bank which has a stock trade feature, we created Stock, StockMarket, SecurityAccount classes and their GUI respectively. The SecurityAccount is not an Account. It stays under the savingAccount which is going to pay for the stock purchase.
+For our database part, we created it as one huge class and put all methods in it. Now we have also broken it and put all methods into their belonging classes. Thus, the code is cleaner.
+
 •Bank Part•
 Account.java
 File that implements basic bookkeeping for accounts, like keeping balance, rate, index, and a collection of transactions associated with the account.
