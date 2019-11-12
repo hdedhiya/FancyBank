@@ -144,6 +144,7 @@ public class BankCustomer extends Customer {
         try {
             pst = (PreparedStatement) sc.getConn().prepareStatement(sql);
             pst.execute();
+            sc.close();
             return true;
         }catch (Exception e) {
             System.out.println("Failed to delete account " + accountNum);
@@ -154,11 +155,13 @@ public class BankCustomer extends Customer {
     //deposit and withdraw
     public static boolean updateAccount(int accountNum, double amt){
         String sql = "update account set balance = '" + amt + "' where accountNum = '" + accountNum + "'";
+        System.out.println(sql);
         PreparedStatement pst = null;
         SQLConnection sc = new SQLConnection();
         try {
             pst = (PreparedStatement) sc.getConn().prepareStatement(sql);
             pst.execute();
+            sc.close();
             return true;
         }catch (Exception e) {
             System.out.println("Failed to update account " + accountNum);

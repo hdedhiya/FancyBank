@@ -77,7 +77,7 @@ public class ViewMarket {
 
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-
+                double initB = savingAccount.getBalance();
                 //buy chosen stock. ask for shares. check for purchasing power
                 //update after buying successfully
                 int selected = table.getSelectedRow();
@@ -101,10 +101,13 @@ public class ViewMarket {
                                 SecurityAccount.addStock(savingAccount.getIndex(), companyName, code, price, amt);
                                 int newBalance = shares - amt;
                                 double purchase = market.queryPrice(companyName, code, amt);
+
+                                System.out.println(initB);
                                 StockMarket.updateStockMarket(newBalance, code);
                                 BankCustomer.updateAccount(savingAccount.getIndex(), savingAccount.getBalance() - purchase);
+                                Account.addTransaction(savingAccount.getIndex(), savingAccount.getAccountType(), "Bought " + code, String.valueOf(initB), String.valueOf(initB-purchase), "0");
                                 ViewSecurity vs = new ViewSecurity(b);
-                                vs.place(bc, savingAccount);
+                                vs.place(bc, (Savings)BankCustomer.getAccount(savingAccount.getIndex()));
                                 frame.dispose();
 
                                 //query price on the choosing stock

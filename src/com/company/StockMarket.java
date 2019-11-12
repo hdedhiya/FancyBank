@@ -95,6 +95,7 @@ public class StockMarket {
 
     public static ArrayList<Stock> getMarket() {
         String sql = "select * from market";
+        //System.out.println(sql);
         PreparedStatement pst = null;
         List<Stock> stocks = new ArrayList<Stock>();
         SQLConnection sc = new SQLConnection();
@@ -102,6 +103,7 @@ public class StockMarket {
             pst = (PreparedStatement) sc.getConn().prepareStatement(sql);
             java.sql.ResultSet rs = pst.executeQuery();
             while (rs.next()) {
+                //System.out.println(rs.getString("companyName"));
                 Stock stock = null;
                 String companyName = rs.getString("companyName");
                 String code = rs.getString("code");
