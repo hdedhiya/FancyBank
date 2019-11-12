@@ -1,7 +1,6 @@
 The reason we choose Harsh’s original design is its GUI contains only one page and we can implement all the functions and operations in the page. In this way, our software is more user-friendly. In addition, its class structure is better because every class is reasonably divided.
 Based on the original design, we decide to implement the SQL part which connects our data to database and Security market part which simulate the real stock market. So far, most of our plans work very well. Also, the money store in bank has only one kind of currency like Dollar but customers could store all kinds of currencies into bank. For the financial market, it will improve the efficiency of Currency circulation; For the bank, it doesn’t need to make currency conversion for so many times. For customer, he doesn’t need to calculate the conversion rate to determine whether he can afford a transaction or stock.
-
-Bank Part
+•Bank Part•
 Account.java
 File that implements basic bookkeeping for accounts, like keeping balance, rate, index, and a collection of transactions associated with the account.
 
@@ -15,20 +14,6 @@ Stores the account types we have like Checking, Loan, and Savings.
 Stores in Account stating which type of account it is.
 
 In the future, we may have a new account type, we just add it here.
-
-Login.java
-Generic login page that interacts with generic Customers and Owners to give two different views depending on the type of account made. Maintains a hashmap of users, using a pair of username, password mapped to a Person. From there depending on the type of Person, we give two different views. The class provides the GUI for the login page as well.
-
-Benefit to existing design: Defines abstract functions addCustomer, addOwner, ownerView, customerView so that any descendent class has access to them and can use the hashmap users that pairs usernames,passwords to a Person. The descendent class can define the extensions to Owner and Customer that make it specific to their business, and we can also define two custom views, one for owners and one for customers. This can also be specific to businesses.
-
-Benefit to future designs: Login can be used for any GUI application that requires usernames and passwords and logging in.
-
-
-Bank.java
-Main workhorse of the program. Extends Login. Provides two different views for Bankers and BankCustomers. Defines several different views and subviews, based on click events. We store several constants, like the amounts of fees, and the array of Currencies we will use for the program. We also have a separate Transaction hashmap here, that is used for all transactions across Customers for the Bank. We define all the click event methods in the class, like add account, delete account, deposit, withdraw, view accounts, view transactions, randomly update the stock price and so on. We also define all the GUIs for all the views. Provides checks for all inputs making sure they are valid options, and also redraws GUI after successful method call. Basically, every function is implemented here other than logging in. In the new design, we add our stock market part to the GUI.
-
-Benefit to future design: Useful for any bank application.
-
 
 Transaction.java
 Object that keeps various statistics for each transaction. A hashmap of transactions is maintained for each account. There is also a general hashmap that the banker can access that overlooks each account.
@@ -46,26 +31,20 @@ Benefit to future designs: Can be used in any design that requires people with u
 
 Owner.java
 Generic Class that extends from Person. Allows us to differentiate from Customers to give two different views after login.
+
 Benefit to future design: Can be used in any future design that requires differentiation in Persons to give different views.
 
+Bank.java
+A generic class that extends owner. Plays a role the stock market manager.
 
 Customer.java
 Generic Class that extends from Person. Allows us to differentiate from Owners to give two different views after login.
 Benefit to future design: Can be used in any future design that requires differentiation in Persons to give different views.
 
-
-
 BankCustomer.java
 Specific extension of Customer class with a hashmap of accounts, and functions to add, remove, and get accounts.
 Benefit to current design: Allows us to give each customer a set of accounts, without limiting the number of accounts they get. Allows us to access and manipulate those set of accounts as well.
 Benefit to future design: Class is program specific, but can be used whenever a Customer needs a set of accounts.
-
-Banker.java
-Specific Banker Class that extends Owner. Plays the role of banker, managing the stock market such as updating the price of stocks.
-
-Benefit to the current design: we need a manager of stock market to control it.
-
-Benefit to the future design: in the future, we have to make a lot of advancement and revision in stock market so it is necessary to have a banker class.
 
 Checking.java
 Class that defines all Checking accounts. Extends from Account. defines its own applyInterest(do nothing), and sets relevant variables to be specific to Checking accounts, like setting accountType to "Checking".
@@ -103,14 +82,48 @@ Pair class that we use to map both usernames and passwords to Person in Login.
 
 Benefit to the current design: A perfect structure for mapping.
 
+•Stock Market part•
+SecurityAccount.java
+Has the methods that users can deal with the stock markets such as buying and selling stock. It doesn’t extend the general account class because it hasn’t balance and basic attribute a general account such as checking and saving accounts have. However, it owns a saving account and we can use the saving account to buy and sell stocks.
+
+Benefit for the current design: when a customer tries to access the stock market, we can create a security account.
+
+StockMarket.java
+Stores a list of stocks. Manages the stock market such as update price of stock and create access for customer to buy, sell and query.
+Benefit to the current design: we need a manager of stock market to control it.
+
+Benefit to the future design: in the future, we have to make a lot of advancement and revision in stock market so it is necessary to have a StockMarket class. The class provides the general methods a market should have but it should be more complicated.
+
+•GUI and Database part•
 SQLConnection.java
 Stores the constants about the configuration of MySQL. Open and close the connection of database.
 
 Benefit to the current design: in charge of database connection.
 
-Stock Market part
-SecurityAccount.java
-Has the methods that users
+Login.java
+Generic login page that interacts with generic Customers and Owners to give two different views depending on the type of account made. Maintains a hashmap of users, using a pair of username, password mapped to a Person. From there depending on the type of Person, we give two different views. The class provides the GUI for the login page as well.
+
+Benefit to existing design: Defines abstract functions addCustomer, addOwner, ownerView, customerView so that any descendent class has access to them and can use the hashmap users that pairs usernames,passwords to a Person. The descendent class can define the extensions to Owner and Customer that make it specific to their business, and we can also define two custom views, one for owners and one for customers. This can also be specific to businesses.
+
+Benefit to future designs: Login can be used for any GUI application that requires usernames and passwords and logging in.
+
+Bank.java
+Main workhorse of the program. Extends Login. Provides two different views for Bankers and BankCustomers. Defines several different views and subviews, based on click events. We store several constants, like the amounts of fees, and the array of Currencies we will use for the program. We also have a separate Transaction hashmap here, that is used for all transactions across Customers for the Bank. We define all the click event methods in the class, like add account, delete account, deposit, withdraw, view accounts, view transactions, randomly update the stock price and so on. We also define all the GUIs for all the views. Provides checks for all inputs making sure they are valid options, and also redraws GUI after successful method call. Basically, every function is implemented here other than logging in. In the new design, we add our stock market part to the GUI.
+
+Benefit to future design: Useful for any bank application.
+
+ViewMarket.java
+View the overall stock market and make further operations like buying.
+
+ViewAccount.java
+View your account and make further operations.
+
+ViewRecent.java
+View recent transactions.
+
+ViewSecurity.java
+View security account and make further operations like selling and buying.
+
 Main.java
 Instantiated a Bank object with relevant currencies, and fee constants.
 
