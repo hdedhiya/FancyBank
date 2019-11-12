@@ -28,11 +28,8 @@ public class ViewMarket {
 
         // pull down the stockmarket from database
         //Collection<Stock> allStocks = new StockMarket().stockMarket;
-        SQLConnection sc = new SQLConnection();
-        sc.TheSqlConnection();
 
-
-        Collection<Stock> market = sc.getMarket();
+        Collection<Stock> market = StockMarket.getMarket();
         String cols[] = {"Company Name", "Code", "Price", "Share"};
         DefaultTableModel tabelModel = new DefaultTableModel(cols, 0){
             @Override
@@ -95,9 +92,8 @@ public class ViewMarket {
                         if (amtS != null && !amtS.isEmpty()) {
                             int amt = Integer.parseInt(amtS);
                             boolean canBuy = checkEnough(amt, shares);
-                            SQLConnection sc = new SQLConnection();
-                            sc.TheSqlConnection();
-                            double balance = sc.getAccount(savingAccount.getIndex()).getBalance();
+
+                            double balance = BankCustomer.getAccount(savingAccount.getIndex()).getBalance();
 
                             double paidPrice = price * amt;
                             int minimum = 100; //minimum amount on saving account to buy stock
@@ -105,13 +101,12 @@ public class ViewMarket {
                             //boolean powerEnoughToBuy = checkPowerEnough();
                             if(canBuy && purchasingPower >= paidPrice) {
                                 int newAmt = shares - amt;
-                                sc.updateStockMarket(newAmt, code);
-                                sc.addStock(savingAccount.getIndex(), companyName, code, price, amt);
+                                StockMarket.updateStockMarket(newAmt, code);
+                                SecurityAccount.addStock(savingAccount.getIndex(), companyName, code, price, amt);
                                 System.out.println("my current balance is " + savingAccount.getBalance());
                                 System.out.println("need to pay " + paidPrice);
                                 double newBalance = balance - paidPrice;
-                                sc.updateAccount(savingAccount.getIndex(), newBalance);
-                                sc.close();
+                                BankCustomer.updateAccount(savingAccount.getIndex(), newBalance);
 
                                 ViewSecurity vs = new ViewSecurity(b);
                                 vs.place(bc, savingAccount);
@@ -142,10 +137,9 @@ public class ViewMarket {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JButton source = (JButton) e.getSource();
-                SQLConnection sc = new SQLConnection();
-                sc.TheSqlConnection();
-                double balance = sc.getAccount(savingAccount.getIndex()).getBalance();
-                sc.close();
+
+                double balance = BankCustomer.getAccount(savingAccount.getIndex()).getBalance();
+
                 int minimum = 100; //minimum amount on saving account to buy stock
                 double purchasingPower = balance - minimum;
                 JOptionPane.showMessageDialog(source, "Your remaining purchasing power is " + purchasingPower);

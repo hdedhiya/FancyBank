@@ -243,6 +243,36 @@ public class Bank extends Login{
 
             }
         });
+
+        JButton queryStocks = new JButton("Query Stock by Acc");
+        queryStocks.setBounds(180, 130, 160, 25);
+        panel.add(queryStocks);
+        queryStocks.addActionListener(new ActionListener() {
+            @Override
+
+            public void actionPerformed(ActionEvent e) {
+                JButton source = (JButton) e.getSource();
+
+                String d = JOptionPane.showInputDialog("Enter account number: ");
+                if (d != null) {
+
+                    try {
+                        Account a = BankCustomer.getAccount(Integer.valueOf(d));
+                        if (a instanceof Savings) {
+                            ArrayList<Stock> stocks = SecurityAccount.getStocks(Integer.valueOf(d));
+                            BankerViewStocks bvs = new BankerViewStocks(Bank.this);
+                            bvs.place(bk, (Savings)a);
+                            frame.dispose();
+                        }
+                    }
+                    catch(NumberFormatException ex){
+                        JOptionPane.showMessageDialog(source, "Enter a valid number!");
+                    }
+                }
+
+
+            }
+        });
     }
 
     //provides methods customers can perform, like viewAccounts, viewInfo,
