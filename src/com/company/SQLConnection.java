@@ -12,8 +12,8 @@ public class SQLConnection {
 	//change the "test" here to the name of your own database
 	private static final String URL="jdbc:mysql://localhost:3306/fancybank?useUnicode=true&characterEncoding=utf8";
 
-	private static final String NAME="root";//username
-	private static final String PASSWORD="hd3d1337";//password
+	private static final String NAME="";//username
+	private static final String PASSWORD="";//password
 	public java.sql.Connection conn = null;
 
 	public SQLConnection(){
